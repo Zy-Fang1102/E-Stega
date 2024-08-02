@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.DetResultMapper">
+    
+    <resultMap type="DetResult" id="DetResultResult">
+        <result property="id"    column="id"    />
+        <result property="filename"    column="filename"    />
+        <result property="time"    column="time"    />
+        <result property="model"    column="model"    />
+        <result property="result"    column="result"    />
+    </resultMap>
+
+    <sql id="selectDetResultVo">
+        select id, filename, time, result, model from det_result
+    </sql>
+
+    <select id="selectDetResultList" parameterType="DetResult" resultMap="DetResultResult">
+        <include refid="selectDetResultVo"/>
+        <where>  
+            <if test="filename != null  and filename != ''"> and filename like concat('%', #{filename}, '%')</if>
+            <if test="time != null  and time != ''"> and time = #{time}</if>
+            <if test="result != null  and result != ''"> and result = #{result}</if>
+            <if test="model != null  and model != ''"> and result = #{model}</if>
+        </where>
+    </select>
+    
+    <select id="selectDetResultById" parameterType="Long" resultMap="DetResultResult">
+        <include refid="selectDetResultVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDetResult" parameterType="DetResult">
+        insert into det_result
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="filename != null and filename != ''">filename,</if>
+            <if test="time != null and time != ''">time,</if>
+            <if test="result != null and result != ''">result,</if>
+            <if test="model != null and model != ''">model,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="filename != null and filename != ''">#{filename},</if>
+            <if test="time != null and time != ''">#{time},</if>
+            <if test="result != null and result != ''">#{result},</if>
+            <if test="model != null and model != ''">#{model},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDetResult" parameterType="DetResult">
+        update det_result
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="filename != null and filename != ''">filename = #{filename},</if>
+            <if test="time != null and time != ''">time = #{time},</if>
+            <if test="result != null and result != ''">result = #{result},</if>
+            <if test="model != null and model != ''">result = #{model},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDetResultById" parameterType="Long">
+        delete from det_result where id = #{id}
+    </delete>
+
+    <delete id="deleteDetResultByIds" parameterType="String">
+        delete from det_result where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

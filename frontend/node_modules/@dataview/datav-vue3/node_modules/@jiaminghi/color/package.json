@@ -1,0 +1,44 @@
+{
+  "name": "@jiaminghi/color",
+  "version": "0.1.1",
+  "author": "JiaMing <743192023@qq.com>",
+  "description": "Color extension",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jiaming743/Color.git"
+  },
+  "scripts": {
+    "build": "node build/index.js",
+    "prepublish": "npm run build",
+    "deploy": "node deploy/index.js",
+    "test": "mocha"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jiaming743/Color/issues"
+  },
+  "keywords": [
+    "color",
+    "hex",
+    "rgb",
+    "bgba",
+    "darken",
+    "lighten"
+  ],
+  "homepage": "https://github.com/jiaming743/Color#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/register": "^7.4.4",
+    "@jiaminghi/fs": "0.0.2",
+    "chai": "^4.2.0",
+    "ftp": "^0.3.10",
+    "mocha": "^6.1.4"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.5.5"
+  }
+}

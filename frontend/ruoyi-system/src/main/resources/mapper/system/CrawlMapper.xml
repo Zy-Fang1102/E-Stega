@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CrawlMapper">
+    
+    <resultMap type="Crawl" id="CrawlResult">
+        <result property="id"    column="id"    />
+        <result property="filename"    column="filename"    />
+        <result property="sourcePath"    column="source_path"    />
+        <result property="targetPath"    column="target_path"    />
+        <result property="time"    column="time"    />
+    </resultMap>
+
+    <sql id="selectCrawlVo">
+        select id, filename, source_path, target_path, time from crawl
+    </sql>
+
+    <select id="selectCrawlList" parameterType="Crawl" resultMap="CrawlResult">
+        <include refid="selectCrawlVo"/>
+        <where>  
+            <if test="filename != null  and filename != ''"> and filename like concat('%', #{filename}, '%')</if>
+            <if test="sourcePath != null  and sourcePath != ''"> and source_path = #{sourcePath}</if>
+            <if test="targetPath != null  and targetPath != ''"> and target_path = #{targetPath}</if>
+            <if test="time != null "> and time = #{time}</if>
+        </where>
+    </select>
+    
+    <select id="selectCrawlById" parameterType="Long" resultMap="CrawlResult">
+        <include refid="selectCrawlVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCrawl" parameterType="Crawl" useGeneratedKeys="true" keyProperty="id">
+        insert into crawl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="filename != null">filename,</if>
+            <if test="sourcePath != null">source_path,</if>
+            <if test="targetPath != null">target_path,</if>
+            <if test="time != null">time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="filename != null">#{filename},</if>
+            <if test="sourcePath != null">#{sourcePath},</if>
+            <if test="targetPath != null">#{targetPath},</if>
+            <if test="time != null">#{time},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCrawl" parameterType="Crawl">
+        update crawl
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="filename != null">filename = #{filename},</if>
+            <if test="sourcePath != null">source_path = #{sourcePath},</if>
+            <if test="targetPath != null">target_path = #{targetPath},</if>
+            <if test="time != null">time = #{time},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCrawlById" parameterType="Long">
+        delete from crawl where id = #{id}
+    </delete>
+
+    <delete id="deleteCrawlByIds" parameterType="String">
+        delete from crawl where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

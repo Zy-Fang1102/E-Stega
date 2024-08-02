@@ -1,0 +1,31 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+
+keras=2.4.2=pypi_0
+keras-preprocessing=1.1.2=pypi_0
+libffi=3.4.2=h7f98852_5
+libgcc-ng=12.2.0=h65d4601_19
+numpy=1.18.5=pypi_0
+pillow=9.5.0=pypi_0
+pip=23.1=pyhd8ed1ab_0
+python_abi=3.8=3_cp38
+tensorboard=2.12.2=pypi_0
+tensorboard-data-server=0.7.0=pypi_0
+tensorboard-plugin-wit=1.8.1=pypi_0
+tensorflow-estimator=2.3.0=pypi_0
+tensorflow-gpu=2.3.0=pypi_0
+tensorflow-io-gcs-filesystem=0.32.0=pypi_0
+termcolor=2.2.0=pypi_0
+terminado=0.17.1=pypi_0
+threadpoolctl=3.1.0=pypi_0
+tinycss2=1.2.1=pypi_0
+tk=8.6.12=h27826a3_0
+torch=1.12.1+cu102=pypi_0
+torchaudio=0.12.1+cu102=pypi_0
+torchvision=0.13.1+cu102=pypi_0
+tornado=6.2=py38h0a891b7_1
+tqdm=4.65.0=pypi_0
+traitlets=5.9.0=pyhd8ed1ab_0
+typing-extensions=4.5.0=hd8ed1ab_0
+typing_extensions=4.5.0=pyha770c72_0
