@@ -19,7 +19,7 @@
 
 - **邮箱**: [fangzy@bupt.edu.cn](mailto:fangzy@bupt.edu.cn)
 
-- **GitHub**: [github.com/your_project_url](https://github.com/your_project_url)
+- **GitHub**: [Zy-Fang1102/E-Stega](https://github.com/Zy-Fang1102/E-Stega)
 
 
 
@@ -29,9 +29,8 @@
 
 ## 设计与实现
 
-- [技术设计说明](https://github.com/your_project_url)
-
-- [系统实现说明](https://github.com/your_project_url)
+- [技术设计说明](https://github.com/Zy-Fang1102/E-Stega/blob/master/技术设计说明.pdf)
+- [系统实现说明](https://github.com/Zy-Fang1102/E-Stega/tree/master/系统实现说明)
 
 ## 系统功能
 
@@ -48,8 +47,8 @@
 0. **克隆仓库**：
 
 ```cmd
-git clone https://github.com/username/project-name.git
-cd project-name
+git clone https://github.com/Zy-Fang1102/E-Stega.git
+cd E-Stega
 ```
 
 ### 网页端
@@ -78,7 +77,7 @@ npm run dev
 mvn spring-boot:run
 ```
 
-5. 部署完成后，我们提供了使用演示视频以供参考，详情见于[Web端系统演示](https://github.com/your_project_url)。
+5. 部署完成后，我们提供了使用演示视频以供参考，详情见于[Web端系统演示](https://pan.baidu.com/s/118QCpemKKjNa3ayCxTY9hA?pwd=ge9y)。
 
 ### APP端
 
