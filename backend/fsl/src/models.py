@@ -12,8 +12,6 @@ def construct_teacher(TFModel, Config, pt_teacher_checkpoint, max_seq_length, cl
     config = Config.from_pretrained(pt_teacher_checkpoint, num_labels=classes)
     config.attention_probs_dropout_prob = attention_probs_dropout_prob
     config.hidden_dropout_prob = hidden_dropout_prob
-    config.attention_probs_dropout_prob = attention_probs_dropout_prob
-    config.hidden_dropout_prob = hidden_dropout_prob
     print(TFModel)
     print(config)
     encoder = TFModel.from_pretrained(pt_teacher_checkpoint, from_pt=True, config=config,name="teacher")
