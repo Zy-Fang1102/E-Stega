@@ -9,5 +9,9 @@ MODELS = [(TFAlbertModel, AlbertTokenizer, AlbertConfig),
           (TFTransfoXLModel,  TransfoXLTokenizer, TransfoXLConfig),
           (TFXLNetModel, XLNetTokenizer, XLNetConfig),
           (TFXLMModel, XLMTokenizer),
-
+          (TFDistilBertModel, DistilBertTokenizer, DistilBertConfig),
+          (TFRobertaModel, RobertaTokenizer, RobertaConfig),
+          (TFXLMRobertaModel, XLMRobertaTokenizer, XLMRobertaConfig),
+          (TFMobileBertForMaskedLM, MobileBertTokenizer, MobileBertConfig),
+          (TFFunnelForMaskedLM, FunnelTokenizer, FunnelConfig)
           ]
