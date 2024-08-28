@@ -40,24 +40,30 @@ GLOBAL_SEED = 42
 
 logger.info("Global seed {}".format(GLOBAL_SEED))
 
-def convert_to_unicode(text):
-  """Converts `text` to Unicode (if it's not already), assuming utf-8 input."""
-  if six.PY3:
-    if isinstance(text, str):
-      return text
-    elif isinstance(text, bytes):
-      return text.decode("utf-8", "ignore")
-    else:
-      raise ValueError("Unsupported string type: %s" % (type(text)))
-  elif six.PY2:
-    if isinstance(text, str):
-      return text.decode("utf-8", "ignore")
-    elif isinstance(text, unicode): # Python2 Compatibility errors (ignore)
-      return text
-    else:
-      raise ValueError("Unsupported string type: %s" % (type(text)))
-  else:
-    raise ValueError("Not running on Python2 or Python 3?")
+# def convert_to_unicode(text):
+#     """Converts `text` to Unicode, assuming utf-8 input.
+
+#     Args:
+#         text (str or bytes): The text to be converted to Unicode.
+
+#     Returns:
+#         str: The Unicode representation of the input text.
+
+#     Raises:
+#         ValueError: If `text` is neither a string nor bytes type.
+#     """
+#     if isinstance(text, str):  # Python 3.x str or Python 2.x unicode
+#         return text
+    
+#     elif isinstance(text, bytes):  # Handling byte strings
+#         try:
+#             return text.decode('utf-8', 'ignore')  # Decode bytes to str (Unicode)
+#         except UnicodeDecodeError:
+#             raise ValueError("Unable to decode bytes to UTF-8")
+    
+#     else:
+#         raise ValueError(f"Unsupported string type: {type(text)}. Expected str or bytes.")
+
 
 if __name__ == '__main__':
 
