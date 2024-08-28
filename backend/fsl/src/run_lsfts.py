@@ -48,12 +48,6 @@ logger.info("Global seed {}".format(GLOBAL_SEED))
 
 #     Returns:
 #         str: The Unicode representation of the input text.
-
-#     Raises:
-#         ValueError: If `text` is neither a string nor bytes type.
-#     """
-#     if isinstance(text, str):  # Python 3.x str or Python 2.x unicode
-#         return text
     
 #     elif isinstance(text, bytes):  # Handling byte strings
 #         try:
