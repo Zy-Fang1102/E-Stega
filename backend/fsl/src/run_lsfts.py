@@ -40,24 +40,6 @@ GLOBAL_SEED = 42
 
 logger.info("Global seed {}".format(GLOBAL_SEED))
 
-# def convert_to_unicode(text):
-#     """Converts `text` to Unicode, assuming utf-8 input.
-
-#     Args:
-#         text (str or bytes): The text to be converted to Unicode.
-
-#     Returns:
-#         str: The Unicode representation of the input text.
-    
-#     elif isinstance(text, bytes):  # Handling byte strings
-#         try:
-#             return text.decode('utf-8', 'ignore')  # Decode bytes to str (Unicode)
-#         except UnicodeDecodeError:
-#             raise ValueError("Unable to decode bytes to UTF-8")
-    
-#     else:
-#         raise ValueError(f"Unsupported string type: {type(text)}. Expected str or bytes.")
-
 
 if __name__ == '__main__':
 
