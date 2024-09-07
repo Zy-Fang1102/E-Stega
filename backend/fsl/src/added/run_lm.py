@@ -228,7 +228,24 @@ def train_lm(dataset, model, Training_Configs, tokenizer):
 	unwrapped_model.save_pretrained(os.path.join(Training_Configs.output_dir, "final"))
 	tokenizer.save_pretrained(os.path.join(Training_Configs.output_dir, "final"))
 
-
+def eval_lstm(eval_dataset, model, criteration, Training_Configs, vocabulary):
+	eval_loss = []
+	model.eval()
+	generator = utils.Generator(eval_dataset.corpus)
+	eval_g = generator.build_generator(Training_Configs.BATCH_SIZE, Training_Configs.SEQUENCE_LEN)
+	with torch.no_grad():
+		while True:
+			try:
+				text = eval_g.__next__()
+			except:
+				break
+			text_in = text[:, :-1]
+			text_target = text[:, 1:]
+			y = model(torch.from_numpy(text_in).long().to(device))
+			loss = criteration(y.reshape(-1, vocabulary.vocab_size),
+							   torch.from_numpy(text_target).reshape(-1).long().to(device))
+			eval_loss.append(loss.item())
+	return np.mean(eval_loss)
 
 def eval_lm(dataset, model, Training_Configs, tokenizer):
 	eval_dataset = dataset["validation"]
