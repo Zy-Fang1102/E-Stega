@@ -21,7 +21,7 @@ from torch.utils.data import DataLoader
 import math
 from tqdm.auto import tqdm
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 logger = logging.getLogger(__name__)
 
