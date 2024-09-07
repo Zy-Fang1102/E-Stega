@@ -21,7 +21,7 @@ from torch.utils.data import DataLoader
 import math
 from tqdm.auto import tqdm
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 logger = logging.getLogger(__name__)
 
@@ -227,6 +227,7 @@ def train_lm(dataset, model, Training_Configs, tokenizer):
 	unwrapped_model = model
 	unwrapped_model.save_pretrained(os.path.join(Training_Configs.output_dir, "final"))
 	tokenizer.save_pretrained(os.path.join(Training_Configs.output_dir, "final"))
+
 
 
 def eval_lm(dataset, model, Training_Configs, tokenizer):
