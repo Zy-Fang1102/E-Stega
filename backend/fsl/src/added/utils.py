@@ -326,6 +326,24 @@ def sample_secret_message(data_path, key=42,num=100):
 		sampled_message.append(lines[i])
 	return sampled_message
 
+class RemovedConfig(object):
+	def __init__(self, config_path):
+		config = MyConfigParser()
+		config.read(config_path, encoding="utf-8")
+		self.configs = self.dictobj2obj(config.__dict__["_sections"])
+
+
+	def dictobj2obj(self, dictobj):
+		if not isinstance(dictobj, dict):
+			return dictobj
+		d = MyDict()
+		for k,v in dictobj.items():
+			d[k] = self.dictobj2obj(v)
+		return d
+
+	def get_configs(self):
+		return self.configs
+
 
 
 if __name__ == '__main__':
