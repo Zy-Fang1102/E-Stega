@@ -333,13 +333,7 @@ class RemovedConfig(object):
 		self.configs = self.dictobj2obj(config.__dict__["_sections"])
 
 
-	def dictobj2obj(self, dictobj):
-		if not isinstance(dictobj, dict):
-			return dictobj
-		d = MyDict()
-		for k,v in dictobj.items():
-			d[k] = self.dictobj2obj(v)
-		return d
+
 
 	def get_configs(self):
 		return self.configs
