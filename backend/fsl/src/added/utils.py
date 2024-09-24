@@ -326,17 +326,58 @@ def sample_secret_message(data_path, key=42,num=100):
 		sampled_message.append(lines[i])
 	return sampled_message
 
-class RemovedConfig(object):
+# class RemovedConfig(object):
+# 	def __init__(self, config_path):
+# 		config = MyConfigParser()
+# 		config.read(config_path, encoding="utf-8")
+# 		self.configs = self.dictobj2obj(config.__dict__["_sections"])
+
+
+
+
+# 	def get_configs(self):
+# 		return self.configs
+
+def get_distribution(data_path):
+	with open(data_path, "r", encoding="utf-8") as f:
+		lines = f.readlines()
+	lengths = dict()
+	for line in lines:
+		words = line.split("\n")[0].split()
+		length = len(words)
+		if lengths.get(length, None) is None:
+			lengths[length]=1
+		else:
+			lengths[length] += 1
+	lengths_tmp = np.zeros(max(list(lengths.keys()))+1)
+	for k,v in lengths.items():
+		lengths_tmp[k] = v
+	lengths_norm = lengths_tmp
+	lengths_norm = lengths_norm/np.sum(lengths_norm)
+	length_sum = 0
+	lengths_cdf = np.zeros_like(lengths_norm)
+	for i,_ in enumerate(lengths_norm.tolist()):
+		length_sum += lengths_norm[i]
+		lengths_cdf[i] = length_sum
+	return lengths_cdf
+
+class Config_11(object):
 	def __init__(self, config_path):
-		config = MyConfigParser()
-		config.read(config_path, encoding="utf-8")
-		self.configs = self.dictobj2obj(config.__dict__["_sections"])
+		configs = json.load(open(config_path, "r", encoding="utf-8"))
+		self.configs = self.dictobj2obj(configs)
 
-
-
+	def dictobj2obj(self, dictobj):
+		if not isinstance(dictobj, dict):
+			return dictobj
+		d = MyDict()
+		for k,v in dictobj.items():
+			d[k] = self.dictobj2obj(v)
+		return d
 
 	def get_configs(self):
 		return self.configs
+
+
 
 
 
