@@ -36,7 +36,17 @@ logging.basicConfig(level=logging.DEBUG,  # 控制台打印的日志级别
                     # 日志格式
                     )
 GLOBAL_SEED = 42
-#GLOBAL_SEED = int(os.getenv("PYTHONHASHSEED"))
+# 初始化全局随机种子
+def set_global_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+set_global_seed(GLOBAL_SEED)
+logger.info(f"Global seed set to {GLOBAL_SEED}")
 
 logger.info("Global seed {}".format(GLOBAL_SEED))
 
