@@ -150,8 +150,12 @@ if __name__ == '__main__':
         logger.warning(f"Unlabeled data file not found: {task_name}/IMDB+AC/transfer.csv. Proceeding without unlabeled data.")
         X_unlabeled = None
 
-    logger.info(X_train_all["input_ids"].shape)
-    logger.info(y_train_all.shape)
+    logger.info(f"Training data shape: {X_train_all['input_ids'].shape}, Training labels shape: {y_train_all.shape}")
+    logger.info(f"Test data shape: {X_test['input_ids'].shape}, Test labels shape: {y_test.shape}")
+    if X_unlabeled is not None:
+        logger.info(f"Unlabeled data shape: {X_unlabeled['input_ids'].shape}")
+    else:
+        logger.info("No unlabeled data loaded.")
     for i in range(3):
         logger.info("***Train***")
         logger.info("Example {}".format(i))
