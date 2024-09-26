@@ -193,15 +193,14 @@ if __name__ == '__main__':
         y_train = y_train_all
     else:
         X_input_ids, X_token_type_ids, X_attention_mask, y_train = [], [], [], []
-        for i in labels:
-            # get sup_labels from each class
-            indx = np.where(y_train_all == i)[0]
-            random.Random(GLOBAL_SEED).shuffle(indx)
-            indx = indx[:sup_labels]
-            X_input_ids.extend(X_train_all["input_ids"][indx])
-            X_token_type_ids.extend(X_train_all["token_type_ids"][indx])
-            X_attention_mask.extend(X_train_all["attention_mask"][indx])
-            y_train.extend(np.full(sup_labels, i))
+        for label in labels:
+            label_indices = np.where(y_train_all == label)[0]
+            np.random.seed(GLOBAL_SEED)
+            label_indices = np.random.choice(label_indices, size=min(sup_labels, len(label_indices)), replace=False)
+            X_input_ids.extend(X_train_all["input_ids"][label_indices])
+            X_token_type_ids.extend(X_train_all["token_type_ids"][label_indices])
+            X_attention_mask.extend(X_train_all["attention_mask"][label_indices])
+            y_train.extend([label] * len(label_indices))
 
     X_input_ids, X_token_type_ids, X_attention_mask, y_train = shuffle(X_input_ids, X_token_type_ids, X_attention_mask,
                                                                        y_train, random_state=GLOBAL_SEED)
