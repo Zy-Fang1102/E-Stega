@@ -173,9 +173,11 @@ if __name__ == '__main__':
 
     # labels indexed from 0 （其实有点小问题，因为不能一定保证标签从0开始，但在本项目中无伤大雅）
     labels = set(y_train_all)
-    if 0 not in labels:
-        y_train_all -= 1
-        y_test -= 1
+    if min(labels) != 0:
+        shift_value = min(labels)
+        y_train_all -= shift_value
+        y_test -= shift_value
+        logger.info(f"Labels shifted by {shift_value}, ensuring labels start from 0.")
     labels = set(y_train_all)
     logger.info("Labels {}".format(labels))
 
