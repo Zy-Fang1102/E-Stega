@@ -216,9 +216,8 @@ if __name__ == '__main__':
                "attention_mask": np.array(X_attention_mask)}
     y_train = np.array(y_train)
 
-    train_model(max_seq_length, X_train, y_train, X_test, y_test, X_unlabeled, model_dir, tokenizer,
-                sup_batch_size=sup_batch_size, unsup_batch_size=unsup_batch_size, unsup_size=unsup_size,
-                sample_size=sample_size, TFModel=TFBertModel, Config=BertConfig, pt_teacher_checkpoint=pt_teacher_checkpoint,
-                sample_scheme=sample_scheme, T=T, alpha=alpha, valid_split=valid_split, sup_epochs=sup_epochs,
-                unsup_epochs=unsup_epochs, N_base=N_base, dense_dropout=dense_dropout,
-                attention_probs_dropout_prob=attention_probs_dropout_prob, hidden_dropout_prob=hidden_dropout_prob)
+if not os.path.exists(model_dir):
+    os.makedirs(model_dir, exist_ok=True)
+    logger.info(f"Created model directory: {model_dir}")
+
+    train_model(max_seq_length, X_train, y_train, X_test, y_test, X_unlabeled, model_dir, tokenizer, ...)
