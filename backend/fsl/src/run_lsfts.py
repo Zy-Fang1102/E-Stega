@@ -57,10 +57,15 @@ if __name__ == '__main__':
 
     # construct the argument parse and parse the arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task", required=True,
-                        help="path of the task directory containing train, test and unlabeled data files")   # 数据集文件夹路径
-    parser.add_argument("--model_dir", required=True,
-                        help="path to store model files")   # 模型文件夹路径
+    parser.add_argument("--task", required=True, help="path of the task directory containing train, test and unlabeled data files")
+    parser.add_argument("--model_dir", required=True, help="path to store model files")
+
+    # 参数验证
+    args = parser.parse_args()
+    if not os.path.exists(args.task):
+        raise FileNotFoundError(f"Task directory '{args.task}' does not exist.")
+    if not os.path.exists(args.model_dir):
+        os.makedirs(args.model_dir, exist_ok=True)
     parser.add_argument("--seq_len", required=True,
                         type=int, help="sequence length")   # 序列长度
 
