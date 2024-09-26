@@ -144,8 +144,11 @@ if __name__ == '__main__':
 
     X_test, y_test = generate_sequence_data(
         max_seq_length, task_name + "/IMDB+AC/test.csv", tokenizer, do_pairwise=do_pairwise)
-    X_unlabeled, _ = generate_sequence_data(
-        max_seq_length, task_name + "/IMDB+AC/transfer.csv", tokenizer, unlabeled=True, do_pairwise=do_pairwise)
+    try:
+        X_unlabeled, _ = generate_sequence_data(max_seq_length, task_name + "/IMDB+AC/transfer.csv", tokenizer, unlabeled=True, do_pairwise=do_pairwise)
+    except FileNotFoundError:
+        logger.warning(f"Unlabeled data file not found: {task_name}/IMDB+AC/transfer.csv. Proceeding without unlabeled data.")
+        X_unlabeled = None
 
     logger.info(X_train_all["input_ids"].shape)
     logger.info(y_train_all.shape)
