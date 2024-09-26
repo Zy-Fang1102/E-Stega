@@ -28,12 +28,13 @@ PRETRAINED_VOCAB_ARCHIVE_MAP = {
 print(os.getenv("PYTHONHASHSEED"))
 logger = logging.getLogger('LSFTS')
 # logging.basicConfig(level = logging.INFO)
-logging.basicConfig(level=logging.DEBUG,  # 控制台打印的日志级别
+log_dir = os.path.dirname('news_328/output_news_ac_n_base5——valloss15Nbase5.log')
+os.makedirs(log_dir, exist_ok=True)
+
+logging.basicConfig(level=logging.DEBUG,  
                     filename='news_328/output_news_ac_n_base5——valloss15Nbase5.log',
-                    filemode='w',  # 模式，有w和a，w就是写模式，每次都会重新写日志，覆盖之前的日志
-                    # a是追加模式，默认如果不写的话，就是追加模式
+                    filemode='w',
                     format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s'
-                    # 日志格式
                     )
 GLOBAL_SEED = 42
 # 初始化全局随机种子
