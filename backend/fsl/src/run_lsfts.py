@@ -11,6 +11,9 @@ import sys
 from transformers import TFBertModel, BertConfig, BertTokenizer
 from sklearn.utils import shuffle
 import faulthandler
+
+import platform
+
 faulthandler.enable()
 
 PRETRAINED_VOCAB_ARCHIVE_MAP = {
@@ -219,5 +222,10 @@ if __name__ == '__main__':
 if not os.path.exists(model_dir):
     os.makedirs(model_dir, exist_ok=True)
     logger.info(f"Created model directory: {model_dir}")
+
+    logger.info(f"Python version: {platform.python_version()}")
+    logger.info(f"PyTorch version: {torch.__version__}")
+    logger.info(f"NumPy version: {np.__version__}")
+    logger.info(f"Global seed: {GLOBAL_SEED}")
 
     train_model(max_seq_length, X_train, y_train, X_test, y_test, X_unlabeled, model_dir, tokenizer, ...)
