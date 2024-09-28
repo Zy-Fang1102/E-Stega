@@ -190,6 +190,45 @@ def ADG_decoder(prob, prev, **kwargs):
         extract_bits += bit_embed
     return extract_bits
 
+def m_bits2int(bits):
+    res = 0
+    for i, bit in enumerate(bits[::-1]):
+        res += bit * (2 ** i)
+    return res
+
+def m_int2bits(inp, num_bits):
+    if num_bits == 0:
+        return []
+    strlist = ('{0:0%db}' % num_bits).format(inp)
+    return [int(strval) for strval in strlist]
+
+def findlist(prob, delta,):
+    diff = (np.array(prob) - delta)
+    tmp_idx = np.argmin(diff**2)
+    if prob[tmp_idx] < delta:
+        return_list = [tmp_idx]
+        if tmp_idx == len(prob) -1:
+            pass
+        else:
+            tmp_sum = prob[tmp_idx]
+            for i in range(tmp_idx+1, len(prob)-1):
+                if delta>(tmp_sum + prob[i]):
+                    tmp_sum += prob[i]
+                    return_list.append(i)
+        return return_list
+    elif tmp_idx >= len(prob)-2:
+        return [tmp_idx]
+    else:
+        new_idx = tmp_idx + 1
+        idx = [new_idx]
+        idx += find_nearest_list(prob[new_idx+1:], delta-prob[new_idx])
+        for i in range(1, len(idx)):
+            idx[i] += new_idx+1
+        # return idx
+        if (delta-np.sum(np.array(prob)[idx]))**2 > diff[tmp_idx]**2:
+            return [tmp_idx]
+        else:
+            return idx
 
 def main(stego_text_file):
     os.makedirs("generation/decoding/GPT2", exist_ok=True)
