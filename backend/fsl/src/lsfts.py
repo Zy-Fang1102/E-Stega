@@ -5,6 +5,8 @@ from transformers import TFBertModel, BertConfig
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 import logging
 import math
@@ -184,7 +186,14 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
         predictions = (model.predict(X_test, verbose=0)).round()
         y_pred = np.argmax(predictions, axis=1)
         C = confusion_matrix(y_test, y_pred)
-        logger.info("confusion_matrix: {}".format(C))
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(C, annot=True, fmt="d", cmap="Blues", xticklabels=list(labels), yticklabels=list(labels))
+        plt.title("Confusion Matrix")
+        plt.xlabel("Predicted")
+        plt.ylabel("True")
+        plt.savefig(os.path.join(model_dir, "confusion_matrix.png"))
+        plt.close()
+        logger.info(f"Confusion matrix saved to {os.path.join(model_dir, 'confusion_matrix.png')}")
         acc = accuracy_score(y_test, y_pred)
         bert_acc.append(acc)
         logger.info("Test accuracy: {}".format(acc))
