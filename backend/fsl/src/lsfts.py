@@ -17,6 +17,15 @@ import tensorflow as tf
 import tensorflow.python.keras as K
 from sklearn.metrics import confusion_matrix
 
+GLOBAL_SEED = 42
+def set_global_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    tf.random.set_seed(seed)
+
+set_global_seed(GLOBAL_SEED)
+logger.info(f"Global seed set to {GLOBAL_SEED}")
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
