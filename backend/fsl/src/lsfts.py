@@ -158,7 +158,9 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
             if counter == 0:
                 logger.info(model.summary())
 
+        os.makedirs(model_dir, exist_ok=True)
         model_file = os.path.join(model_dir, "model.h5")
+        logger.info(f"Model directory verified/created: {model_dir}")
         logger.info("Model file is {}".format(model_file))
         # 如果之前已经完成了循环选择最优模型，那么直接加载最优模型，就不用执行下述操作了
         if os.path.exists(model_file):
