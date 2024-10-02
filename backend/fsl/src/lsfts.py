@@ -28,6 +28,13 @@ set_global_seed(GLOBAL_SEED)
 logger.info(f"Global seed set to {GLOBAL_SEED}")
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+physical_devices = tf.config.list_physical_devices('GPU')
+if physical_devices:
+    for gpu in physical_devices:
+        tf.config.experimental.set_memory_growth(gpu, True)
+    logger.info(f"Detected {len(physical_devices)} GPU(s). Memory growth enabled.")
+else:
+    logger.info("No GPU detected. Running on CPU.")
 
 logger = logging.getLogger('LSFTS')
 
