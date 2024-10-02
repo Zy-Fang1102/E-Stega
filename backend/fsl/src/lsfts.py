@@ -126,8 +126,8 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
         X_train, y_train = X, y
         X_dev, y_dev = X_test, y_test
 
-    logger.info("Y Train : {} {}".format(y_train, y_train.sum()))
-    logger.info("Y Dev : {} {}".format(y_dev, y_dev.sum()))
+    logger.info(f"Y Train shape: {y_train.shape}, Sum: {y_train.sum()}")
+    logger.info(f"Y Dev shape: {y_dev.shape}, Sum: {y_dev.sum()}")
     logger.info("X Train Shape: {} {}".format(
         X_train["input_ids"].shape, y_train.shape))
     logger.info("X Dev Shape: {} {}".format(
