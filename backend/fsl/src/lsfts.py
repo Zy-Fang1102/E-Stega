@@ -72,7 +72,7 @@ def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=64, training=T
         y_pred = []
         with strategy.scope():
             def eval_step(inputs):
-                return model(inputs, training=training).numpy()  # [:,0]   # 在训练模式下（training=True），模型会启用dropout等正则化机制，即蒙特卡洛（MC）Dropout方法
+                return model(inputs, training=training).logits.numpy()
 
             def distributed_eval_step(dataset_inputs):
                 # return strategy.experimental_run_v2(eval_step, args=(dataset_inputs,))
