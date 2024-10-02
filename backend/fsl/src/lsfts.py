@@ -63,8 +63,8 @@ def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=64, training=T
 
     logger.info("Yielding predictions looping over ...")
     strategy = tf.distribute.MirroredStrategy()
-    data = tf.data.Dataset.from_tensor_slices(x).batch(batch_size*gpus)
-    dist_data = strategy.experimental_distribute_dataset(data)
+    data = tf.data.Dataset.from_tensor_slices(x).batch(batch_size * gpus)
+    dist_data = strategy.distribute_datasets_from_function(lambda _: data)
     # perform T stochastic forward passes for each sample in the large unlabeled pool
     for i in range(T):
         print(i)
