@@ -113,7 +113,9 @@ def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=64, training=T
 def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, tokenizer, sup_batch_size=4, unsup_batch_size=32, unsup_size=4096, sample_size=16384, TFModel=TFBertModel, Config=BertConfig, pt_teacher_checkpoint='bert-base-uncased', sample_scheme='easy_bald_class_conf', T=30, alpha=0.1, valid_split=0.5, sup_epochs=70, unsup_epochs=25, N_base=10, dense_dropout=0.5, attention_probs_dropout_prob=0.3, hidden_dropout_prob=0.3):
     logger.info(f"Hyperparameters: unsup_size={unsup_size}, sample_size={sample_size}, sup_batch_size={sup_batch_size}, unsup_batch_size={unsup_batch_size}")
     labels = set(y)
-    logger.info("Class labels {}".format(labels))
+    if len(labels) > len(np.unique(y)):
+        logger.warning("Detected more labels than expected. Check data preprocessing.")
+    logger.info(f"Class labels: {labels}")
 
     # split X and y to train and dev with valid_split
     if valid_split > 0:
