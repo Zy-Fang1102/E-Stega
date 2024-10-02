@@ -166,8 +166,10 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
         if os.path.exists(model_file):
             model.load_weights(model_file)
             best_base_model = model
-            logger.info("Model file loaded from {}".format(model_file))
+            logger.info(f"Model file loaded from {model_file}. Training will resume.")
             break
+        else:
+            logger.info(f"No existing model file found at {model_file}. Starting training from scratch.")
 
         #model.fit(x=X_train, y=y_train, shuffle=True, epochs=sup_epochs, validation_data=(X_dev, y_dev), batch_size=sup_batch_size*gpus, callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_acc', patience=5, restore_best_weights=True)])
         model.fit(x=X_train, y=y_train, shuffle=True, epochs=sup_epochs, validation_data=(X_dev, y_dev), batch_size=sup_batch_size *
