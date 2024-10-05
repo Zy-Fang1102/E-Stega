@@ -318,6 +318,7 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
         logger.info(X_unlabeled_sample["input_ids"][:5])
 
         if 'uni' in sample_scheme:
+            logger.info("Using uniform sampling as fallback scheme.")
             y_mean, y_var, y_T = None, None, None
         elif 'bald' in sample_scheme:  # using BALD  len(labels)是类别数
             y_mean, y_var, y_pred, y_T = mc_dropout_evaluate(
