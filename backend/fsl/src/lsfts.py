@@ -160,7 +160,15 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
             mixed_precision.set_policy(policy)
             logger.info("Enabled mixed precision training.")
 
-            model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=3e-5, epsilon=1e-08), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name="acc")])
+            lr_schedule = tf.keras.optimizers.schedules.PolynomialDecay(
+                initial_learning_rate=3e-5,
+                decay_steps=len(X_train["input_ids"]) * sup_epochs // sup_batch_size,
+                end_learning_rate=1e-7
+            )
+            optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule, epsilon=1e-08)
+
+            model.compile(optimizer=optimizer, loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name="acc")])
+            logger.info("Learning rate scheduler added.")
             if counter == 0:
                 logger.info(model.summary())
 
