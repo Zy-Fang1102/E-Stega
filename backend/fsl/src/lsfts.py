@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from tqdm import tqdm
 import logging
 import math
 import models
@@ -63,13 +64,12 @@ def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=64, training=T
     y_T = np.zeros((T, len(x['input_ids']), classes))
     acc = None
 
-    logger.info("Yielding predictions looping over ...")
+    logger.info(f"Running MC Dropout with {T} stochastic forward passes.")
     strategy = tf.distribute.MirroredStrategy()
     data = tf.data.Dataset.from_tensor_slices(x).batch(batch_size * gpus)
     dist_data = strategy.distribute_datasets_from_function(lambda _: data)
     # perform T stochastic forward passes for each sample in the large unlabeled pool
-    for i in range(T):
-        print(i)
+    for i in tqdm(range(T), desc="MC Dropout passes"):
 
         y_pred = []
         with strategy.scope():
