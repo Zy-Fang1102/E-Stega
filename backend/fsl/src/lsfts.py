@@ -190,6 +190,8 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
         logger.info("best_validation_loss {}".format(best_validation_loss))
         predictions = (model.predict(X_test, verbose=0)).round()
         y_pred = np.argmax(predictions, axis=1)
+        np.save(os.path.join(model_dir, "predictions.npy"), y_pred)
+        logger.info(f"Saved predictions to {os.path.join(model_dir, 'predictions.npy')}")
         C = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(10, 8))
         sns.heatmap(C, annot=True, fmt="d", cmap="Blues", xticklabels=list(labels), yticklabels=list(labels))
