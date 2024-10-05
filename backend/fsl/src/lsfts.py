@@ -5,6 +5,7 @@ from transformers import TFBertModel, BertConfig
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
+from tqdm import trange
 import seaborn as sns
 import matplotlib.pyplot as plt
 from tensorflow.keras.mixed_precision import experimental as mixed_precision
@@ -255,9 +256,8 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
     best_test_acc = 0.
     max_test_acc = 0.
 
-    for epoch in range(25):
-
-        logger.info("Starting loop {}".format(epoch))
+    for epoch in trange(25, desc="Self-training epochs"):
+        logger.info(f"Starting epoch {epoch + 1}")
 
         test_acc = model.evaluate(X_test, y_test, verbose=0)[-1]
         logger.info(model.evaluate(X_test, y_test))
