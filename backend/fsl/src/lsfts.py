@@ -334,6 +334,9 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
             raise ValueError(f"Unsupported sampling scheme: {sample_scheme}")
 
        
+        if hasattr(sampler, "custom_callback"):
+            sampler.custom_callback(X_unlabeled_sample)
+
         X_batch, y_batch, X_conf = f_(
             tokenizer, X_unlabeled_sample, y_mean, y_var, y_pred, unsup_size, len(labels), y_T=y_T)
             
