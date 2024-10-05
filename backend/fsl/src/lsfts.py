@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+from tensorflow.keras.mixed_precision import experimental as mixed_precision
 from tqdm import tqdm
 import logging
 import math
@@ -156,8 +156,11 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
             print(pt_teacher_checkpoint)
             model = models.construct_teacher(TFModel, Config, pt_teacher_checkpoint, max_seq_length, len(
                 labels), dense_dropout=dense_dropout, attention_probs_dropout_prob=attention_probs_dropout_prob, hidden_dropout_prob=hidden_dropout_prob)
-            model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=3e-5, epsilon=1e-08), loss=tf.keras.losses.SparseCategoricalCrossentropy(
-                from_logits=True), metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name="acc")])
+            policy = mixed_precision.Policy('mixed_float16')
+            mixed_precision.set_policy(policy)
+            logger.info("Enabled mixed precision training.")
+
+            model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=3e-5, epsilon=1e-08), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name="acc")])
             if counter == 0:
                 logger.info(model.summary())
 
