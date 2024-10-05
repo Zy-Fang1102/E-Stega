@@ -316,11 +316,12 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
         else:
             conf = False
 
-        if 'bald' in sample_scheme and 'eas' in sample_scheme:
-            f_ = sampler.sample_by_bald_easiness
-
         if 'bald' in sample_scheme and 'eas' in sample_scheme and 'clas' in sample_scheme:
             f_ = sampler.sample_by_bald_class_easiness
+        elif 'bald' in sample_scheme and 'eas' in sample_scheme:
+            f_ = sampler.sample_by_bald_easiness
+        else:
+            raise ValueError(f"Unsupported sampling scheme: {sample_scheme}")
 
        
         X_batch, y_batch, X_conf = f_(
