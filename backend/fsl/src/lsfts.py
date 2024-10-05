@@ -66,7 +66,18 @@ def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=64, training=T
 
     logger.info(f"Running MC Dropout with {T} stochastic forward passes.")
     strategy = tf.distribute.MirroredStrategy()
-    data = tf.data.Dataset.from_tensor_slices(x).batch(batch_size * gpus)
+    data = tf.data.Dataset.from_tensor_slices(X_unlabeled_sample).batch(batch_size)
+    if len(X_unlabeled_sample["input_ids"]) > 1e6:
+        logger.warning("Unlabeled data is too large. Switching to generator-based loading.")
+        def data_generator():
+            for i in range(0, len(X_unlabeled_sample["input_ids"]), batch_size):
+                yield {key: X_unlabeled_sample[key][i:i + batch_size] for key in X_unlabeled_sample}
+
+        data = tf.data.Dataset.from_generator(data_generator, output_signature={
+            "input_ids": tf.TensorSpec(shape=(None,), dtype=tf.int32),
+            "token_type_ids": tf.TensorSpec(shape=(None,), dtype=tf.int32),
+            "attention_mask": tf.TensorSpec(shape=(None,), dtype=tf.int32)
+        })
     dist_data = strategy.distribute_datasets_from_function(lambda _: data)
     # perform T stochastic forward passes for each sample in the large unlabeled pool
     for i in tqdm(range(T), desc="MC Dropout passes"):
