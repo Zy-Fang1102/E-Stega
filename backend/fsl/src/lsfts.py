@@ -19,6 +19,10 @@ import sampler
 import tensorflow as tf
 import tensorflow.python.keras as K
 from sklearn.metrics import confusion_matrix
+from tensorflow.python.client import device_lib
+
+devices = device_lib.list_local_devices()
+logger.info(f"Available devices: {[device.name for device in devices]}")
 
 GLOBAL_SEED = 42
 def set_global_seed(seed):
