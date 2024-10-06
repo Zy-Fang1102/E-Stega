@@ -71,7 +71,8 @@ def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=64, training=T
 
     logger.info(f"Running MC Dropout with {T} stochastic forward passes.")
     strategy = tf.distribute.MirroredStrategy()
-    data = tf.data.Dataset.from_tensor_slices(X_unlabeled_sample).batch(batch_size)
+    data = tf.data.Dataset.from_tensor_slices(X_unlabeled_sample).batch(batch_size).cache()
+    logger.info("Data caching enabled for faster data loading.")
     if len(X_unlabeled_sample["input_ids"]) > 1e6:
         logger.warning("Unlabeled data is too large. Switching to generator-based loading.")
         def data_generator():
