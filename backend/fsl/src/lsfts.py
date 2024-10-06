@@ -213,7 +213,12 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
             best_validation_loss = val_loss[0]
         logger.info("best_validation_loss {}".format(best_validation_loss))
         predictions = (model.predict(X_test, verbose=0)).round()
+        top_k = 3
         y_pred = np.argmax(predictions, axis=1)
+
+        # 增加 top-k 预测
+        top_k_preds = np.argsort(predictions, axis=1)[:, -top_k:]
+        logger.info(f"Top-{top_k} predictions: {top_k_preds[:5]}")
         np.save(os.path.join(model_dir, "predictions.npy"), y_pred)
         logger.info(f"Saved predictions to {os.path.join(model_dir, 'predictions.npy')}")
         C = confusion_matrix(y_test, y_pred)
