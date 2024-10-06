@@ -202,8 +202,11 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
             logger.info(f"No existing model file found at {model_file}. Starting training from scratch.")
 
         #model.fit(x=X_train, y=y_train, shuffle=True, epochs=sup_epochs, validation_data=(X_dev, y_dev), batch_size=sup_batch_size*gpus, callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_acc', patience=5, restore_best_weights=True)])
-        model.fit(x=X_train, y=y_train, shuffle=True, epochs=sup_epochs, validation_data=(X_dev, y_dev), batch_size=sup_batch_size *
-                  gpus, callbacks=[tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)])
+        try:
+            model.fit(x=X_train, y=y_train, shuffle=True, epochs=sup_epochs, validation_data=(X_dev, y_dev), batch_size=sup_batch_size*gpus)
+        except ValueError as e:
+            logger.error(f"Data dimension mismatch during training: {e}")
+            raise
 
         val_loss = model.evaluate(X_dev, y_dev)
         logger.info("Validation loss for run {} : {}".format(
