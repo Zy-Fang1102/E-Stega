@@ -63,6 +63,9 @@ logger = logging.getLogger('LSFTS')
 #
 #     return learning_rate_scheduler
 
+def custom_loss(y_true, y_pred):
+    ce_loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)(y_true, y_pred)
+    return ce_loss + alpha * tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_true, logits=y_pred))
 
 def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=64, training=True):
 
@@ -183,8 +186,8 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
                 end_learning_rate=1e-7
             )
             optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule, epsilon=1e-08)
-
-            model.compile(optimizer=optimizer, loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name="acc")])
+            model.compile(optimizer=optimizer, loss=custom_loss, metrics=[tf.keras.metrics.SparseCategoricalAccuracy(name="acc")])
+            logger.info("Using custom loss function with confidence regularization.")
             logger.info("Learning rate scheduler added.")
             if counter == 0:
                 logger.info(model.summary())
