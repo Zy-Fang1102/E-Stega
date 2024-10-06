@@ -313,8 +313,12 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
             model_dir, "model_{}_{}.h5".format(epoch, sample_scheme))
 
         if os.path.exists(model_file):
-            model.load_weights(model_file)
-            logger.info("Model file loaded from {}".format(model_file))
+            try:
+                model.load_weights(model_file)
+                logger.info("Model file loaded from {}".format(model_file))
+            except Exception as e:
+                logger.error(f"Failed to load model file {model_file}: {e}")
+                raise
             continue
 
         # compute confidence on the unlabeled set
