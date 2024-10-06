@@ -222,7 +222,9 @@ def train_model(max_seq_length, X, y, X_test, y_test, X_unlabeled, model_dir, to
         # 增加 top-k 预测
         top_k_preds = np.argsort(predictions, axis=1)[:, -top_k:]
         logger.info(f"Top-{top_k} predictions: {top_k_preds[:5]}")
-        np.save(os.path.join(model_dir, "predictions.npy"), y_pred)
+        np.savez(os.path.join(model_dir, "evaluation_results.npz"),
+                predictions=y_pred, labels=y_test, confusion_matrix=C)
+        logger.info(f"Saved evaluation results to {os.path.join(model_dir, 'evaluation_results.npz')}")
         logger.info(f"Saved predictions to {os.path.join(model_dir, 'predictions.npy')}")
         C = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(10, 8))
