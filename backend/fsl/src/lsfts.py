@@ -112,7 +112,7 @@ def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=64, training=T
     #logger.info (y_T)
 
     # compute mean
-    y_mean = np.mean(y_T, axis=0)
+    y_mean = y_T.mean(axis=0)  # 使用 NumPy 的矢量化操作
     assert y_mean.shape == (len(x['input_ids']), classes)
 
     # compute majority prediction
