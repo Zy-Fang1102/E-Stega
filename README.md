@@ -6,7 +6,7 @@
 
 <!-- PROJECT SHIELDS -->
 
-[![Contributors][contributors-shield]][contributors-url][![watchers][watchers-shield]][watchers-url][![Forks][forks-shield]][forks-url][![Stargazers][stars-shield]][stars-url][![MIT License][license-shield]][license-url]
+[![Contributors][contributors-shield]][contributors-url] [![watchers][watchers-shield]][watchers-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![MIT License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
 <br />
