@@ -7,9 +7,11 @@
 <!-- PROJECT SHIELDS -->
 
 [![Contributors][contributors-shield]][contributors-url]
+
+[![watchers][watchers-shield]][watchers-url]
+
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
@@ -52,7 +54,7 @@
 
 ### 系统简介
 
-​	**E-Stega** 是一套高性能恶意隐写载体检测系统。系统由**基础模型构建、数据预处理模块、MC Dropout近似贝叶斯模块、信息增益计算模块、局部采样器模块和半监督模型微调模块**等关键模块组成，确保了系统可以高效完成对恶意隐写载体的检测，同时大大降低系统实现成本，特别是数据标注成本。
+​	**E-Stega** 是一套高性能恶意隐写载体检测系统。系统由**基础模型、数据预处理模块、MC Dropout近似贝叶斯模块、信息增益计算模块、局部采样器模块和半监督模型微调模块**等关键模块组成，确保了系统可以高效完成对恶意隐写载体的检测，同时大大降低系统实现成本，特别是数据标注成本。
 
 ### 设计与实现
 
@@ -74,7 +76,7 @@
 0. **克隆仓库**：
 
 ```cmd
-git clone https://github.com/Zy-Fang1102/E-Stega.git
+git clone  https://github.com/Zy-Fang1102/E-Stega.git
 cd E-Stega
 ```
 
@@ -139,7 +141,7 @@ qq: 1577322025
 
 ### 版权说明
 
-该项目签署了MIT 授权许可，详情请参阅 [LICENSE](https://github.com/Zy-Fang1102/E-Stega/blob/master/LICENSE)
+该项目签署了MIT 授权许可，详情请参阅 [LICENSE](https://github.com/Zy-Fang1102/E-Stega/blob/master/LICENSE)。
 
 <!-- links -->
 
@@ -149,8 +151,8 @@ qq: 1577322025
 [forks-url]: https://github.com/Zy-Fang1102/E-Stega/network/members
 [stars-shield]: https://img.shields.io/github/stars/Zy-Fang1102/E-Stega.svg?style=flat-square
 [stars-url]: https://github.com/Zy-Fang1102/E-Stega/stargazers
-[issues-shield]: https://img.shields.io/github/issues/Zy-Fang1102/E-Stega.svg?style=flat-square
-[issues-url]: https://img.shields.io/github/issues/Zy-Fang1102/E-Stega.svg
 [license-shield]: https://img.shields.io/github/license/Zy-Fang1102/E-Stega.svg?style=flat-square
 [license-url]: https://github.com/Zy-Fang1102/E-Stega/blob/master/LICENSE.txt
+[watchers-shield]: https://img.shields.io/github/watchers/Zy-Fang1102/E-Stega.svg?style=flat-square
+[watchers-url]: https://github.com/Zy-Fang1102/E-Stega/watchers
 
