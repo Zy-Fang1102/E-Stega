@@ -22,7 +22,7 @@
     <a href="https://github.com/Zy-Fang1102/E-Stega/"><strong>Explore the documentation of this project »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/Zy-Fang1102/E-Stega/blob/master/README_En">English</a>
+    <a href="https://github.com/Zy-Fang1102/E-Stega/blob/master/README_En.md">English</a>
     ·
     <a href="https://github.com/Zy-Fang1102/E-Stega/blob/master/README.md">中文</a>
 
