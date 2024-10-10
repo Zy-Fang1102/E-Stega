@@ -6,7 +6,7 @@
 
 <!-- PROJECT SHIELDS -->
 
-[![Contributors][contributors-shield]][contributors-url] [![watchers][watchers-shield]][watchers-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![MIT License][license-shield]][license-url]
+[![watchers][watchers-shield]][watchers-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![MIT License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -139,8 +139,6 @@ qq: 1577322025
 
 <!-- links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/Zy-Fang1102/E-Stega.svg?style=flat-square
-[contributors-url]: https://github.com/Zy-Fang1102/E-Stega/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/Zy-Fang1102/E-Stega.svg?style=flat-square
 [forks-url]: https://github.com/Zy-Fang1102/E-Stega/network/members
 [stars-shield]: https://img.shields.io/github/stars/Zy-Fang1102/E-Stega.svg?style=flat-square
