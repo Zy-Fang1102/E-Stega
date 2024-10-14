@@ -70,6 +70,15 @@ def train_rnn(train_dataset, val_dataset, model, Training_Configs, vocabulary):
 					torch.save(model.state_dict(), 'models/' + Training_Configs.DATASET + '-best-checkpoint' + '.pkl')
 					logger.info('-----------------------------------------------------')
 
+				# 备用判别
+				# if eval_loss > best_loss:
+				# 	best_loss = eval_loss
+				# 	logger.info('-----------------------------------------------------')
+				# 	logger.info('saving parameters')
+				# 	os.makedirs('models', exist_ok=True)
+				# 	torch.save(model.state_dict(), 'models/' + Training_Configs.DATASET + '-best-checkpoint' + '.pkl')
+				# 	logger.info('-----------------------------------------------------')
+
 
 		if STEPS % Training_Configs.GENERATE_EVERY == 0:
 			model.eval()

@@ -20,9 +20,9 @@ def construct_teacher(TFModel, Config, pt_teacher_checkpoint, max_seq_length, cl
     attention_mask = Input(shape=(max_seq_length,), dtype=tf.int32, name="attention_mask")
     token_type_ids = Input(shape=(max_seq_length,), dtype=tf.int32, name="token_type_ids")
 
-    input_ids1= Input(shape=(max_seq_length,), dtype=tf.int32, name="input_ids")
-    attention_mask1 = Input(shape=(max_seq_length,), dtype=tf.int32, name="attention_mask")
-    token_type_ids1 = Input(shape=(max_seq_length,), dtype=tf.int32, name="token_type_ids")
+    # input_ids1= Input(shape=(max_seq_length,), dtype=tf.int32, name="input_ids")
+    # attention_mask1 = Input(shape=(max_seq_length,), dtype=tf.int32, name="attention_mask")
+    # token_type_ids1 = Input(shape=(max_seq_length,), dtype=tf.int32, name="token_type_ids")
 
     output = encoder(input_ids, token_type_ids=token_type_ids,  attention_mask=attention_mask)
     output = Dropout(dense_dropout)(output[0][:,0])
