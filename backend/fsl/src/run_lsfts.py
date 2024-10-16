@@ -169,6 +169,7 @@ if __name__ == '__main__':
         X_unlabeled = None
 
     logger.info(f"Training data shape: {X_train_all['input_ids'].shape}, Training labels shape: {y_train_all.shape}")
+    logger.info(f"Total labeled samples: {len(y_train_all)}")
     logger.info(f"Test data shape: {X_test['input_ids'].shape}, Test labels shape: {y_test.shape}")
     if X_unlabeled is not None:
         logger.info(f"Unlabeled data shape: {X_unlabeled['input_ids'].shape}")
