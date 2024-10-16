@@ -4,6 +4,7 @@ from lsfts import train_model
 from transformers import AutoTokenizer
 import argparse
 
+import time
 import numpy as np
 import os
 import random
@@ -154,7 +155,10 @@ if __name__ == '__main__':
     if not os.path.exists(train_file):
         logger.error(f"Training file not found: {train_file}")
         sys.exit(1)
-    X_train_all, y_train_all = generate_sequence_data(max_seq_length, train_file, tokenizer, do_pairwise=do_pairwise)
+    start_time = time.time()
+    X_train_all, y_train_all = generate_sequence_data(...)
+    end_time = time.time()
+    logger.info(f"Training data loaded in {end_time - start_time:.2f} seconds.")
 
     X_test, y_test = generate_sequence_data(
         max_seq_length, task_name + "/IMDB+AC/test.csv", tokenizer, do_pairwise=do_pairwise)
