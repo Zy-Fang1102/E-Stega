@@ -169,7 +169,7 @@ if __name__ == '__main__':
     if X_unlabeled is not None:
         logger.info(f"Unlabeled data shape: {X_unlabeled['input_ids'].shape}")
     else:
-        logger.info("No unlabeled data loaded.")
+        logger.warning("Unlabeled data is missing! Certain self-training features may not work.")
     for i in range(3):
         logger.info("***Train***")
         logger.info("Example {}".format(i))
