@@ -236,7 +236,9 @@ if not os.path.exists(model_dir):
 
     logger.info(f"Python version: {platform.python_version()}")
     logger.info(f"PyTorch version: {torch.__version__}")
+    logger.info(f"TensorFlow version: {tf.__version__}")
     logger.info(f"NumPy version: {np.__version__}")
+    logger.info(f"System platform: {platform.system()} {platform.release()}")
     logger.info(f"Global seed: {GLOBAL_SEED}")
 
     train_model(max_seq_length, X_train, y_train, X_test, y_test, X_unlabeled, model_dir, tokenizer, ...)
