@@ -74,8 +74,12 @@ if __name__ == '__main__':
 
     # 参数验证
     args = parser.parse_args()
-    if not os.path.exists(args.task):
-        raise FileNotFoundError(f"Task directory '{args.task}' does not exist.")
+    try:
+        if not os.path.exists(args.task):
+            raise FileNotFoundError(f"Task directory '{args.task}' does not exist.")
+    except Exception as e:
+        logger.error(e)
+        sys.exit(1)
     if not os.path.exists(args.model_dir):
         os.makedirs(args.model_dir, exist_ok=True)
     parser.add_argument("--seq_len", required=True,
