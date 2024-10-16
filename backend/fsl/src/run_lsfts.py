@@ -233,7 +233,7 @@ if __name__ == '__main__':
 
 if not os.path.exists(model_dir):
     os.makedirs(model_dir, exist_ok=True)
-    logger.info(f"Created model directory: {model_dir}")
+    logger.info(f"Model directory exists: {model_dir}")
 
     logger.info(f"Python version: {platform.python_version()}")
     logger.info(f"PyTorch version: {torch.__version__}")
