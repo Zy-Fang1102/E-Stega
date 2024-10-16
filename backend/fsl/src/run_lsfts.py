@@ -150,8 +150,11 @@ if __name__ == '__main__':
     
     tokenizer = BertTokenizer.from_pretrained(pt_teacher_checkpoint)
     logger.info(f"Loaded tokenizer from checkpoint: {pt_teacher_checkpoint}")
-    X_train_all, y_train_all = generate_sequence_data(max_seq_length, task_name + "/IMDB+AC/train.csv", tokenizer,
-                                                      do_pairwise=do_pairwise)
+    train_file = os.path.join(task_name, "IMDB+AC/train.csv")
+    if not os.path.exists(train_file):
+        logger.error(f"Training file not found: {train_file}")
+        sys.exit(1)
+    X_train_all, y_train_all = generate_sequence_data(max_seq_length, train_file, tokenizer, do_pairwise=do_pairwise)
 
     X_test, y_test = generate_sequence_data(
         max_seq_length, task_name + "/IMDB+AC/test.csv", tokenizer, do_pairwise=do_pairwise)
