@@ -31,8 +31,16 @@ PRETRAINED_VOCAB_ARCHIVE_MAP = {
 print(os.getenv("PYTHONHASHSEED"))
 logger = logging.getLogger('LSFTS')
 # logging.basicConfig(level = logging.INFO)
-log_dir = os.path.dirname('news_328/output_news_ac_n_base5——valloss15Nbase5.log')
-os.makedirs(log_dir, exist_ok=True)
+log_file = 'news_328/output_news_ac_n_base5——valloss15Nbase5.log'
+log_dir = os.path.dirname(log_file)
+if log_dir:
+    os.makedirs(log_dir, exist_ok=True)
+
+logging.basicConfig(level=logging.DEBUG,  
+                    filename=log_file,
+                    filemode='w',
+                    format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s'
+                    )
 
 logging.basicConfig(level=logging.DEBUG,  
                     filename='news_328/output_news_ac_n_base5——valloss15Nbase5.log',
