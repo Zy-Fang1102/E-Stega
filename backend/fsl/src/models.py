@@ -29,3 +29,4 @@ def construct_teacher(TFModel, Config, pt_teacher_checkpoint, max_seq_length, cl
     output = Dense(classes, kernel_initializer=tf.keras.initializers.TruncatedNormal(stddev=config.initializer_range))(output)
     model = tf.keras.Model(inputs=[input_ids, token_type_ids, attention_mask], outputs=output)
     return model
+

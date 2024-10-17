@@ -18,17 +18,17 @@ def get_BALD_acquisition(y_T):
 
 
 # 不区分类别的BALD采样
-def sample_by_bald_easiness(tokenizer, X, y, y_var, y, num_samples, num_classes, y_T):
+def sample_by_bald_easiness(tokenizer, X, y_mean, y_var, y, num_samples, num_classes, y_T):
     
 	logger.info ("Sampling by easy BALD acquisition function")
 	BALD_acq = get_BALD_acquisition(y_T)
-	p_norm = np.maximum(np.(len(BALD_acq)), (1. - BALD_acq)/np.sum(1. - BALD_acq))
+	p_norm = np.maximum(np.zeros(len(BALD_acq)), (1. - BALD_acq)/np.sum(1. - BALD_acq))
 	p_norm = p_norm / np.sum(p_norm)   # 归一化概率分布，确保其总和为1，这是随机选择函数所需要的
 	logger.info (p_norm[:10])
-	indices = np.random(len(X['input_ids']), num_samples, p=p_norm, replace=False)
+	indices = np.random.choice(len(X['input_ids']), num_samples, p=p_norm, replace=False)
 	X_s = {"input_ids": X["input_ids"][indices], "token_type_ids": X["token_type_ids"][indices], "attention_mask": X["attention_mask"][indices]}
 	y_s = y[indices]
-	w_s = y_var[][:,0]
+	w_s = y_var[indices][:,0]
 	return X_s, y_s, w_s
 
 
