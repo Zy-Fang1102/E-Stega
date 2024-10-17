@@ -40,7 +40,7 @@ logger = logging.getLogger('LSFTS')
 #     return learning_rate_scheduler
 
 
-def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=128, training=True):
+def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=64, training=True):
 
     y_T = np.zeros((T, len(x['input_ids']), classes))
     acc = None
@@ -62,11 +62,11 @@ def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=128, training=
                 # return strategy.experimental_run_v2(eval_step, args=(dataset_inputs,))
                 return strategy.run(eval_step, args=(dataset_inputs,))
 
-            for batch in dist_data:
-                pred = distributed_eval_step(batch)
-                for gpu in range(gpus):
-                    # y_pred.extend(pred.values[gpu])
-                    y_pred.extend(pred)
+            # for batch in dist_data:
+            #     pred = distributed_eval_step(batch)
+            #     for gpu in range(gpus):
+            #         # y_pred.extend(pred.values[gpu])
+            #         y_pred.extend(pred)
 
         # converting logits to probabilities
         y_T[i] = tf.nn.softmax(np.array(y_pred))
