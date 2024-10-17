@@ -40,7 +40,7 @@ logger = logging.getLogger('LSFTS')
 #     return learning_rate_scheduler
 
 
-def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=64, training=True):
+def mc_dropout_evaluate(model, gpus, classes, x, T=30, batch_size=128, training=True):
 
     y_T = np.zeros((T, len(x['input_ids']), classes))
     acc = None
