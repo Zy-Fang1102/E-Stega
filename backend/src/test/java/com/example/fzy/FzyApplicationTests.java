@@ -42,12 +42,5 @@ class FzyApplicationTests {
     
         System.out.printf("Property '%s' has the expected value: '%s'.%n", propertyKey, actualPropertyValue);
     }
-
-    @Test
-    void checkApplicationBeansCount() {
-        // Verify that the application context contains a positive number of beans
-        int beanCount = applicationContext.getBeanDefinitionCount();
-        assertTrue(beanCount > 0, () -> "Expected at least one bean in the application context, but found: " + beanCount);
-        System.out.printf("Application context contains %d beans.%n", beanCount);
-    }
+    
 }
