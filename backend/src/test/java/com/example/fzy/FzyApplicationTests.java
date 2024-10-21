@@ -8,6 +8,7 @@ class FzyApplicationTests {
 
     @Test
     void contextLoads() {
+        // Add any additional test logic here, if necessary
+        System.out.println("Application context loaded successfully.");
     }
-
 }
