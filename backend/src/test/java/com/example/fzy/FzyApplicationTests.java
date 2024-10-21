@@ -25,17 +25,22 @@ class FzyApplicationTests {
         // Verify if a specific bean exists in the application context
         String beanName = "exampleBeanName"; // Replace with an actual bean name
         boolean isBeanPresent = applicationContext.containsBean(beanName);
-        assertTrue(isBeanPresent, "Bean '" + beanName + "' should be present in the application context");
-        System.out.println("Bean '" + beanName + "' is present in the application context.");
+        assertTrue(isBeanPresent, () -> "Bean '" + beanName + "' should be present in the application context, but it is not found.");
+        System.out.printf("Bean '%s' is present in the application context.%n", beanName);
     }
-
+    
     @Test
     void verifyEnvironmentProperty() {
         // Verify that a specific environment property is loaded correctly
+        String propertyKey = "spring.application.name";
         String expectedPropertyValue = "fzy-application"; // Replace with expected value
-        String actualPropertyValue = applicationContext.getEnvironment().getProperty("spring.application.name");
-        assertEquals(expectedPropertyValue, actualPropertyValue, "Property 'spring.application.name' should match the expected value.");
-        System.out.println("Property 'spring.application.name' has the expected value: " + actualPropertyValue);
+        String actualPropertyValue = applicationContext.getEnvironment().getProperty(propertyKey);
+    
+        assertNotNull(actualPropertyValue, () -> "Property '" + propertyKey + "' should not be null.");
+        assertEquals(expectedPropertyValue, actualPropertyValue, 
+            () -> String.format("Property '%s' expected to be '%s', but was '%s'.", propertyKey, expectedPropertyValue, actualPropertyValue));
+    
+        System.out.printf("Property '%s' has the expected value: '%s'.%n", propertyKey, actualPropertyValue);
     }
 
     @Test
