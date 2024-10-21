@@ -40,9 +40,9 @@ class FzyApplicationTests {
 
     @Test
     void checkApplicationBeansCount() {
-        // Check the number of beans loaded in the application context
+        // Verify that the application context contains a positive number of beans
         int beanCount = applicationContext.getBeanDefinitionCount();
-        assertTrue(beanCount > 0, "The application context should have at least one bean loaded");
-        System.out.println("Number of beans loaded in the application context: " + beanCount);
+        assertTrue(beanCount > 0, () -> "Expected at least one bean in the application context, but found: " + beanCount);
+        System.out.printf("Application context contains %d beans.%n", beanCount);
     }
 }
