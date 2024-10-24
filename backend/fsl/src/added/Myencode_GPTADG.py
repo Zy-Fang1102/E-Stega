@@ -80,7 +80,16 @@ def ADG_encoder(prob, bit_stream, bit_index, Generation_Configs):
         prob = prob.tolist()
         indices = indices.tolist()
         result = []
-
+        for i in range(2 ** bit):
+            result.append([[], []])
+        for i in range(2 ** bit - 1):
+            result[i][0].append(prob[0])
+            result[i][1].append(indices[0])
+            del (prob[0])
+            del (indices[0])
+            while sum(result[i][0]) < mean:
+                delta = mean - sum(result[i][0])
+                index = near(prob, delta)
                 if prob[index] - delta < delta:
                     result[i][0].append(prob[index])
                     result[i][1].append(indices[index])
@@ -119,6 +128,7 @@ def int2bits_low(inp, num_bits):
     strlist = ('{0:0%db}' % num_bits).format(inp)
     return [int(strval) for strval in reversed(strlist)]
 
+
 def main(Config, bit_stream_file):
     # Setup logging
     logging.basicConfig(
@@ -132,6 +142,10 @@ def main(Config, bit_stream_file):
     logger.info("*****************Parser Arguments*******************")
     logger.info("Training Configs")
     logger.info(json.dumps(Training_Configs))
+
+    res = 0
+    for i, bit in enumerate(bits):
+        res += bit * (2 ** i)
 
     if Training_Configs.model_type in ["GPT"]:
         # only CLM
