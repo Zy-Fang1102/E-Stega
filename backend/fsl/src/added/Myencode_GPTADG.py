@@ -80,16 +80,7 @@ def ADG_encoder(prob, bit_stream, bit_index, Generation_Configs):
         prob = prob.tolist()
         indices = indices.tolist()
         result = []
-        for i in range(2 ** bit):
-            result.append([[], []])
-        for i in range(2 ** bit - 1):
-            result[i][0].append(prob[0])
-            result[i][1].append(indices[0])
-            del (prob[0])
-            del (indices[0])
-            while sum(result[i][0]) < mean:
-                delta = mean - sum(result[i][0])
-                index = near(prob, delta)
+
                 if prob[index] - delta < delta:
                     result[i][0].append(prob[index])
                     result[i][1].append(indices[index])
