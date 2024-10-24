@@ -176,6 +176,19 @@ def m_int2bits(inp, num_bits):
     strlist = ('{0:0%db}' % num_bits).format(inp)
     return [int(strval) for strval in strlist]
 
+def find_est(prob, delta,):
+    diff = (np.array(prob) - delta)
+    tmp_idx = np.argmin(diff**2)
+    if prob[tmp_idx] < delta:
+        return tmp_idx
+    elif tmp_idx >= len(prob)-2:
+        return tmp_idx
+    else:
+        new_idx = tmp_idx+1
+        idx = find_nearest(prob[new_idx+1:], delta-prob[new_idx])
+        idx += new_idx+1
+        return idx
+
 def findlist(prob, delta,):
     diff = (np.array(prob) - delta)
     tmp_idx = np.argmin(diff**2)
