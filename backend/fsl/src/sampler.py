@@ -117,7 +117,11 @@ def sample_by_bald_class_easiness(tokenizer, X, y_mean, y_var, y, num_samples, n
 			replace = True
 		else:
 			replace = False
-		indices = np.random.choice(len(X_input_ids), samples_per_class, p=p_norm, replace=replace)
+		try:
+			indices = np.random.choice(len(X_input_ids), samples_per_class, p=p_norm, replace=replace)
+		except ValueError as e:
+			logger.error(f"Error during sampling for class {label}: {e}")
+			raise
 		X_s_input_ids += list(X_input_ids[indices])
 		X_s_token_type_ids += list(X_token_type_ids[indices])
 		X_s_attention_mask += list(X_attention_mask[indices])
