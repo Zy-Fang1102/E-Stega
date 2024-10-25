@@ -118,9 +118,9 @@ def sample_by_bald_class_easiness(tokenizer, X, y_mean, y_var, y, num_samples, n
 		else:
 			replace = False
 		indices = np.random.choice(len(X_input_ids), samples_per_class, p=p_norm, replace=replace)
-		X_s_input_ids.extend(X_input_ids[indices])
-		X_s_token_type_ids.extend(X_token_type_ids[indices])
-		X_s_attention_mask.extend(X_attention_mask[indices])
+		X_s_input_ids += list(X_input_ids[indices])
+		X_s_token_type_ids += list(X_token_type_ids[indices])
+		X_s_attention_mask += list(X_attention_mask[indices])
 		y_s.extend(y_[indices])
 		w_s.extend(y_var_[indices][:,0])
 	X_s_input_ids, X_s_token_type_ids, X_s_attention_mask, y_s, w_s = shuffle(X_s_input_ids, X_s_token_type_ids, X_s_attention_mask, y_s, w_s)
