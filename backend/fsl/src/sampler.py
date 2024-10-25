@@ -29,7 +29,12 @@ def sample_by_bald_easiness(tokenizer, X, y_mean, y_var, y, num_samples, num_cla
 		raise ValueError("Sum of probabilities for sampling is zero.")
 	p_norm = p_norm / np.sum(p_norm)
 	logger.info (p_norm[:10])
-	indices = np.random.choice(len(X['input_ids']), num_samples, p=p_norm, replace=False)
+	if len(X['input_ids']) < num_samples:
+		logger.warning("Number of samples exceeds input data size. Sampling with replacement.")
+		replace = True
+	else:
+		replace = False
+	indices = np.random.choice(len(X['input_ids']), num_samples, p=p_norm, replace=replace)
 	X_s = {"input_ids": X["input_ids"][indices], "token_type_ids": X["token_type_ids"][indices], "attention_mask": X["attention_mask"][indices]}
 	y_s = y[indices]
 	w_s = y_var[indices][:,0]
