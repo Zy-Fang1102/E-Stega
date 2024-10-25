@@ -22,7 +22,8 @@ def sample_by_bald_easiness(tokenizer, X, y_mean, y_var, y, num_samples, num_cla
     
 	logger.info ("Sampling by easy BALD acquisition function")
 	BALD_acq = get_BALD_acquisition(y_T)
-	p_norm = np.maximum(np.zeros(len(BALD_acq)), (1. - BALD_acq)/np.sum(1. - BALD_acq))
+	positive_acq = np.maximum(0, 1. - BALD_acq)
+	p_norm = positive_acq / np.sum(positive_acq)
 	if np.sum(p_norm) == 0:
 		logger.error("Sum of probabilities is zero. Check BALD acquisition function output.")
 		raise ValueError("Sum of probabilities for sampling is zero.")
