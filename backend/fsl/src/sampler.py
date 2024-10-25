@@ -90,7 +90,8 @@ def sample_by_bald_easiness(tokenizer, X, y_mean, y_var, y, num_samples, num_cla
 # 在每个类别中按照BALD的容易程度进行采样
 def sample_by_bald_class_easiness(tokenizer, X, y_mean, y_var, y, num_samples, num_classes, y_T):
 
-	logger.info ("Sampling by easy BALD acquisition function per class")
+	logger.info("Sampling by easy BALD acquisition function per class")
+	logger.info(f"Number of classes: {num_classes}, Samples per class: {samples_per_class}")
 	BALD_acq = get_BALD_acquisition(y_T)
 	BALD_acq = (1. - BALD_acq)/np.sum(1. - BALD_acq)
 	logger.info (BALD_acq)
