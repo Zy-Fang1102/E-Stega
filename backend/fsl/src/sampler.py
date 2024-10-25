@@ -48,7 +48,8 @@ def sample_by_bald_easiness(tokenizer, X, y_mean, y_var, y, num_samples, num_cla
 # 	p_norm = np.maximum(np.zeros(len(BALD_acq)), (1. - BALD_acq)/np.sum(1. - BALD_acq))
 # 	p_norm = p_norm / np.sum(p_norm)
 # 	logger.info (p_norm[:10])
-# 	indices = np.random.choice(len(X['input_ids']), num_samples, p=p_norm, replace=False)
+	# rng = np.random.default_rng(42)  # 使用全局随机种子
+	# indices = rng.choice(len(X['input_ids']), num_samples, p=p_norm, replace=False)
 # 	X_s = {"input_ids": X["input_ids"][indices], "token_type_ids": X["token_type_ids"][indices], "attention_mask": X["attention_mask"][indices]}
 # 	y_s = y[indices]
 # 	w_s = y_var[indices][:,0]
