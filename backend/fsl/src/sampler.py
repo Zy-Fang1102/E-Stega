@@ -10,19 +10,19 @@ logger = logging.getLogger('LSFTS')
 
 # 公式（7）的实现，论文公式里左数第三个求和符号左边少一个1/T，是求mean而不是sum
 def get_BALD_acquisition(y_T):
-    """
-    Computes BALD acquisition function for uncertainty-based sampling.
+	"""
+	Computes BALD acquisition function for uncertainty-based sampling.
 
-    Args:
-        y_T (numpy.ndarray): Predictions from multiple stochastic forward passes 
-                             with shape (T, N, C), where T is the number of passes, 
-                             N is the number of samples, and C is the number of classes.
+	Args:
+		y_T (numpy.ndarray): Predictions from multiple stochastic forward passes 
+								with shape (T, N, C), where T is the number of passes, 
+								N is the number of samples, and C is the number of classes.
 
-    Returns:
-        numpy.ndarray: BALD scores for each sample.
-    """
+	Returns:
+		numpy.ndarray: BALD scores for each sample.
+	"""
 
-	expected_entropy = - np.mean(np.sum(y_T * np.log(np.clip(y_T, 1e-10, 1.0)), axis=-1), axis=0) 
+	expected_entropy = - np.mean(np.sum(y_T * np.log(y_T + 1e-10), axis=-1), axis=0)
 	expected_p = np.mean(y_T, axis=0)
 	entropy_expected_p = - np.sum(expected_p * np.log(expected_p + 1e-10), axis=-1)
 	return (entropy_expected_p - expected_entropy)
