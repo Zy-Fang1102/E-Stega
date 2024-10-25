@@ -128,6 +128,12 @@ def sample_by_bald_class_easiness(tokenizer, X, y_mean, y_var, y, num_samples, n
 		y_s.extend(y_[indices])
 		w_s.extend(y_var_[indices][:,0])
 	X_s_input_ids, X_s_token_type_ids, X_s_attention_mask, y_s, w_s = shuffle(X_s_input_ids, X_s_token_type_ids, X_s_attention_mask, y_s, w_s)
-	return {'input_ids': np.array(X_s_input_ids), 'token_type_ids': np.array(X_s_token_type_ids), 'attention_mask': np.array(X_s_attention_mask)}, np.array(y_s), np.array(w_s)
+	X_s = {'input_ids': np.asarray(X_s_input_ids, dtype=np.int32),
+		'token_type_ids': np.asarray(X_s_token_type_ids, dtype=np.int32),
+		'attention_mask': np.asarray(X_s_attention_mask, dtype=np.int32)}
+	y_s = np.asarray(y_s, dtype=np.int32)
+	w_s = np.asarray(w_s, dtype=np.float32)
+
+	return X_s, y_s, w_s
 
 
