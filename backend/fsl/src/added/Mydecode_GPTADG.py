@@ -95,6 +95,12 @@ def decode_stego_text(stego_text):
     stego_tokens = tokenizer(stego_text, return_tensors="pt", padding=True, truncation=True)
     stego_tokens = stego_tokens.to(device)
 
+    input_ids = encoded_prompt
+    stega_bit = [''] * (input_ids.shape[-1]+1)
+    logits = model(input_ids).logits[:, -1, :]
+    logits -= logits.max()
+    probs = torch.exp(logits)
+
     # Generate the decoded bit_stream
     with torch.no_grad():
         # 增加max_length

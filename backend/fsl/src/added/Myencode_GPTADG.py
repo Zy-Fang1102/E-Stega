@@ -143,12 +143,6 @@ def main(Config, bit_stream_file):
     logger.info("Training Configs")
     logger.info(json.dumps(Training_Configs))
 
-    res = 0
-    for i, bit in enumerate(bits):
-        res += bit * (2 ** i)
-        for i, bit in enumerate(bits):
-            res += bit * (2 ** i)
-
     if Training_Configs.model_type in ["GPT"]:
         # only CLM
 
