@@ -98,6 +98,9 @@ class Old_LM(nn.Module):
 				prob[:, forbidden_ind] = 0
 		prob, ids = prob.sort(descending=True)
 		prob = prob/prob.sum()
+		log_prob = self.forward(x)
+		prob = torch.exp(log_prob)[:, -1, :]
+		p, i = prob.sort(descending=True)
 		cum_prob = prob.cumsum(1)
 		cum_prob_flags = cum_prob > topp
 		stop_id = cum_prob_flags.nonzero(as_tuple=True)[1][0]
