@@ -70,8 +70,7 @@ class Old_LM(nn.Module):
 		x = x.long()
 		_ = self.embedding(x)
 		_ = _.permute(1, 0, 2)
-		h_all, __ = self.rnn(_)
-		h_all = h_all.permute(1, 0, 2)
+
 		_ = self.output_layer(h_all)
 		_ = self.log_softmax(_)
 		return _
