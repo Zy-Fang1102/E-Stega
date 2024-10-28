@@ -80,6 +80,9 @@ class Old_LM(nn.Module):
 		log_prob = self.forward(x)
 		prob = torch.exp(log_prob)[:, -1, :]
 		p, i = prob.sort(descending=True)
+
+		prob = torch.exp(log_prob)[:, -1, :]
+		p, i = prob.sort(descending=True)
 		self.p = p
 		if forbidden is not None:
 			for forbidden_ind in forbidden:
