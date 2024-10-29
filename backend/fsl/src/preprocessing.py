@@ -20,9 +20,9 @@ def convert_to_unicode(text):
       raise ValueError("Unsupported string type: %s" % (type(text)))
   elif six.PY2:
     if isinstance(text, str):
-      return text.decode("utf-8", "ignore")
-    elif isinstance(text, unicode): # Python2 Compatibility errors (ignore)
-      return text
+        return text.decode("utf-8", "ignore")
+    elif isinstance(text, unicode):  # noqa: F821 - Python 3中不存在unicode
+        return text
     else:
       raise ValueError("Unsupported string type: %s" % (type(text)))
   else:
