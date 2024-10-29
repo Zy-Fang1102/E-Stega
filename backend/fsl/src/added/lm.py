@@ -56,6 +56,8 @@ class Old_LM(nn.Module):
 		self.embedding = nn.Embedding(vocab_size, embed_size)
 		if cell == 'rnn':
 			self.rnn = nn.RNN(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
+		elif cell == 'gru':
+			self.rnn = nn.GRU(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
 
 		else:
 			raise Exception('no such rnn cell')
