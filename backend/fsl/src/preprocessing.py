@@ -11,6 +11,18 @@ from tqdm import tqdm
 logger = logging.getLogger('LSFTS')
 
 def convert_to_unicode(text):
+  """
+  Converts the input text to Unicode, assuming utf-8 encoding.
+
+  Args:
+      text (str or bytes): Input text in string or byte format.
+
+  Returns:
+      str: Unicode string.
+
+  Raises:
+      ValueError: If the input text is not a supported type (str or bytes).
+  """
   """Converts `text` to Unicode (if it's not already), assuming utf-8 input."""
   if six.PY3:
     if isinstance(text, str):
