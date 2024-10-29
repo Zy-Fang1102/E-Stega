@@ -92,7 +92,9 @@ def generate_sequence_data(MAX_SEQUENCE_LENGTH, input_file, tokenizer, unlabeled
   
 
 
-    return {"input_ids": np.array(X["input_ids"]), "token_type_ids": token_type_ids, "attention_mask": np.array(X["attention_mask"])}, np.array(y)
+    y = np.asarray(y, dtype=np.int32)
+    logger.info(f"Labels converted to numpy array with shape: {y.shape} and type: {y.dtype}")
+    return {"input_ids": np.array(X["input_ids"]), "token_type_ids": token_type_ids, "attention_mask": np.array(X["attention_mask"])}, y
 
 
 
