@@ -72,10 +72,8 @@ def generate_sequence_data(MAX_SEQUENCE_LENGTH, input_file, tokenizer, unlabeled
             #y.append(label)
 
 
-    if do_pairwise:
-      X =  tokenizer(X1, X2, padding=True, truncation=True, max_length = MAX_SEQUENCE_LENGTH)
-    else:
-      X =  tokenizer(X1, padding=True, truncation=True, max_length = MAX_SEQUENCE_LENGTH)
+    logger.info(f"Generating sequence data with do_pairwise={do_pairwise}")
+    X = tokenizer(X1, X2, padding=True, truncation=True, max_length=MAX_SEQUENCE_LENGTH) if do_pairwise else tokenizer(X1, padding=True, truncation=True, max_length=MAX_SEQUENCE_LENGTH)
 
 
     total_samples = sum(label_count.values())
