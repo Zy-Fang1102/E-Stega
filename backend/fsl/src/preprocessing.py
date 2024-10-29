@@ -58,7 +58,11 @@ def generate_sequence_data(MAX_SEQUENCE_LENGTH, input_file, tokenizer, unlabeled
             if do_pairwise:
               label = int(convert_to_unicode(line[2]))
             else:
-              label = int(convert_to_unicode(line["label"]))
+              try:
+                  label = int(convert_to_unicode(line["label"]))
+              except ValueError as e:
+                  logger.error(f"Failed to convert label '{line['label']}' to integer: {e}")
+                  continue
             y.append(label)
             label_count[label] += 1
         else:
