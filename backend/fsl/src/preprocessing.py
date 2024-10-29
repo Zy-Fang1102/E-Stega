@@ -5,6 +5,7 @@ import logging
 import numpy as np
 import six
 import tensorflow as tf
+from tqdm import tqdm
 
 
 logger = logging.getLogger('LSFTS')
@@ -42,7 +43,8 @@ def generate_sequence_data(MAX_SEQUENCE_LENGTH, input_file, tokenizer, unlabeled
 
     with tf.io.gfile.GFile(input_file, "r") as f:
       reader=csv.DictReader(f)
-      for line in reader:
+      logger.info("Processing input file and generating sequence data...")
+      for line in tqdm(reader, desc="Reading data"):
   
       #reader = csv.reader(f, delimiter="\t", quotechar="|")
       #for line in reader:
