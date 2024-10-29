@@ -73,8 +73,10 @@ def generate_sequence_data(MAX_SEQUENCE_LENGTH, input_file, tokenizer, unlabeled
       X =  tokenizer(X1, padding=True, truncation=True, max_length = MAX_SEQUENCE_LENGTH)
 
 
-    for key in label_count.keys():
-        logger.info ("Count of instances with label {} is {}".format(key, label_count[key]))
+    total_samples = sum(label_count.values())
+    for key, count in label_count.items():
+        logger.info(f"Count of instances with label {key}: {count}")
+    logger.info(f"Total number of samples processed: {total_samples}")
 
     #logger.info ("X[token_type_ids]{}".format(X["token_type_ids"]))
     if "token_type_ids" not in X:
