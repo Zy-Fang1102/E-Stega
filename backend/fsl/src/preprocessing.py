@@ -36,6 +36,10 @@ def generate_sequence_data(MAX_SEQUENCE_LENGTH, input_file, tokenizer, unlabeled
     y = []
 
     label_count = defaultdict(int)
+    if not tf.io.gfile.exists(input_file):
+        logger.error(f"Input file not found: {input_file}")
+        raise FileNotFoundError(f"Input file '{input_file}' does not exist.")
+
     with tf.io.gfile.GFile(input_file, "r") as f:
       reader=csv.DictReader(f)
       for line in reader:
