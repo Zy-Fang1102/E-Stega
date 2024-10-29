@@ -50,7 +50,8 @@ def generate_sequence_data(MAX_SEQUENCE_LENGTH, input_file, tokenizer, unlabeled
         #print(line[0])
         #print(line[0][1])
         if len(line) == 0:
-          continue
+            logger.warning("Encountered an empty line in the input file. Skipping.")
+            continue
         X1.append(convert_to_unicode(line["sentence"]))
         if do_pairwise:
           X2.append(convert_to_unicode(line[1]))
