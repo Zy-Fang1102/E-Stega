@@ -84,7 +84,8 @@ def generate_sequence_data(MAX_SEQUENCE_LENGTH, input_file, tokenizer, unlabeled
 
     #logger.info ("X[token_type_ids]{}".format(X["token_type_ids"]))
     if "token_type_ids" not in X:
-        token_type_ids = np.zeros((len(X["input_ids"]), MAX_SEQUENCE_LENGTH))
+        token_type_ids = np.zeros_like(X["input_ids"], dtype=np.int32)
+        logger.info("token_type_ids not found in tokenizer output. Initialized to zeros.")
         logger.info ("token_type_ids  is {}".format(token_type_ids.shape))
     else:
         token_type_ids = np.array(X["token_type_ids"])
