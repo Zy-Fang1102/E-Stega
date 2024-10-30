@@ -59,7 +59,7 @@ class Vocabulary(object):
 		self._min_len = min_len
 		self._word_drop = word_drop
 		self._encoding = encoding
-		self.token_num = 64
+		self.token_num = 0
 		self.vocab_size_raw = 0
 		self.vocab_size = 0
 		self.w2i = {}
@@ -90,10 +90,10 @@ class Vocabulary(object):
 		self.token_num = len(words_all)
 		word_distribution = sorted(collections.Counter(words_all).items(), key=lambda x: x[1], reverse=True)
 		self.vocab_size_raw = len(word_distribution)
-		for (word, value) in word_distribution:
-			if value > self._word_drop:
-				self.w2i[word] = len(self.w2i)
-				self.i2w[len(self.i2w)] = word
+		# for (word, value) in word_distribution:
+		# 	if value > self._word_drop:
+		# 		self.w2i[word] = len(self.w2i)
+		# 		self.i2w[len(self.i2w)] = word
 		self.vocab_size = len(self.i2w)
 		start_word_distribution = sorted(collections.Counter(start_words).items(), key=lambda x: x[1], reverse=True)
 		self.start_words = [_[0] for _ in start_word_distribution]
