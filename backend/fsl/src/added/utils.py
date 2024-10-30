@@ -59,7 +59,7 @@ class Vocabulary(object):
 		self._min_len = min_len
 		self._word_drop = word_drop
 		self._encoding = encoding
-		self.token_num = 0
+		self.token_num = 64
 		self.vocab_size_raw = 0
 		self.vocab_size = 0
 		self.w2i = {}

@@ -105,8 +105,8 @@ class Old_LM(nn.Module):
 		cum_prob = prob.cumsum(1)
 		cum_prob_flags = cum_prob > topp
 		stop_id = cum_prob_flags.nonzero(as_tuple=True)[1][0]
-		# if stop_id == 0 :
-		# 	stop_id += 1
+		if stop_id == 0 :
+			stop_id += 1
 		return ids[0][torch.multinomial(prob[:stop_id]/prob[:stop_id].sum(),1)]
 		# return torch.multinomial(prob, 1)
 
