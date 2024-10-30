@@ -11,8 +11,7 @@ class LM(GPT2PreTrainedModel):
 		self.embedding = nn.Embedding(my_vocab_size, embed_size)
 		if cell == 'rnn':
 			self.rnn = nn.RNN(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
-		elif cell == 'gru':
-			self.rnn = nn.GRU(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
+
 		elif cell == 'lstm':
 			self.rnn = nn.LSTM(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
 		else:
