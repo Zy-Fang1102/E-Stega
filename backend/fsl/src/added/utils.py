@@ -209,6 +209,11 @@ class Corpus(object):
 					sentence = ['_BOS'] + sentence + ['_EOS']
 					self.corpus.append(list(map(_transfer, sentence)))
 					self.labels.append(label)
+		for (w, c) in word_distribution:
+			if c <= self._word_drop:
+				self.unk_distribution[self.w2i[w]] = c
+		self.unk_distribution = self.unk_distribution/np.sum(self.unk_distribution)
+		start_word_distribution = sorted(collections.Counter(start_words).items(), key=lambda x: x[1], reverse=True)
 		self.corpus_length = [len(i) for i in self.corpus]
 		self.max_sentence_length = max(self.corpus_length)
 		self.min_sentence_length = min(self.corpus_length)
@@ -292,6 +297,9 @@ def get_corpus_distribution(data_path):
 	lengths_tmp = np.zeros(max(list(lengths.keys()))+1)
 	for k,v in lengths.items():
 		lengths_tmp[k] = v
+		new_sentences = new_sentences[:2000000]  # down sampling
+		train = new_sentences[:int(len(new_sentences) * ratio)]
+		test = new_sentences[int(len(new_sentences) * ratio):]
 	lengths_norm = lengths_tmp
 	lengths_norm = lengths_norm/np.sum(lengths_norm)
 	length_sum = 0
