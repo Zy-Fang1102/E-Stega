@@ -111,6 +111,9 @@ class UNK_Vocabulary(object):
 		self.token_num = 0
 		self.vocab_size_raw = 0
 		self.vocab_size = 0
+		self._len = max_len
+		self._min_seg = min_len
+		self._word_drop = word_drop
 		self.w2i = {}
 		self.i2w = {}
 		self.start_words = []
