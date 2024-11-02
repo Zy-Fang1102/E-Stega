@@ -49,4 +49,5 @@ if __name__ == '__main__':
     # bpw_jsonlines("generation/encoding/1124-movie-ac/stegos-encoding.jsonl")
     # bpw_jsonlines("generation/encoding/1124-tweet-ac-oov/stegos-encoding.jsonl")
     # bpw_jsonlines("generation/encoding/1124-tweet-ac/stegos-encoding.jsonl")
+    # obj(  )
     bpw_jsonlines("generation/encoding/1124-movie-hc/stegos-encoding.jsonl")
