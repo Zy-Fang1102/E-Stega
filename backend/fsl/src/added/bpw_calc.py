@@ -27,6 +27,12 @@ def bpw_jsonlines(filename, max_num=None):
                 break
         print("%s : %s" % (filename, str(len(bits) / len(tokens))))
 
+def obj(obj):
+    if not isinstance(obj, dict):
+        return obj
+    d = MyDict()
+    return d
+
 
 if __name__ == '__main__':
     # bpw(filename="stego-grouping/reddit-0124-select-10000-with-isolated/grouping")
