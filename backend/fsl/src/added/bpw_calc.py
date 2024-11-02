@@ -29,9 +29,9 @@ def bpw_jsonlines(filename, max_num=None):
 
 
 if __name__ == '__main__':
-    # bpw(filename="stego-grouping/reddit-0124-select-10000-with-isolated/grouping")
-    # for bit in range(1,16):
-    #     bpw(filename="../generation/stego-ac/reddit-0124-select-10000-with-isolated/topk-"+str(bit)+"bit")
+    bpw(filename="stego-grouping/reddit-0124-select-10000-with-isolated/grouping")
+    for bit in range(1,16):
+        bpw(filename="../generation/stego-ac/reddit-0124-select-10000-with-isolated/topk-"+str(bit)+"bit")
     # for bit in range(1, 6):
     #     bpw(filename="../generation/stego-hc/reddit-0124-select-10000-with-isolated/huffman-topk-" + str(bit) + "bit")
     # for bit in range(1, 9):
