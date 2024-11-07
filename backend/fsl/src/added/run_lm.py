@@ -247,30 +247,65 @@ def eval_lstm(eval_dataset, model, criteration, Training_Configs, vocabulary):
 			eval_loss.append(loss.item())
 	return np.mean(eval_loss)
 
-def eval_lm(dataset, model, Training_Configs, tokenizer):
-	eval_dataset = dataset["validation"]
-	eval_dataloader = DataLoader(
-		eval_dataset, collate_fn=default_data_collator, batch_size=Training_Configs.BATCH_SIZE
-	)
-	model.eval()
-	losses = []
-	for step, batch in enumerate(eval_dataloader):
-		with torch.no_grad():
-			batch = {k: batch[k].to(device) for k in batch}
-			outputs = model(**batch)
+import torch
+import math
+from torch.utils.data import DataLoader
+from transformers import default_data_collator
 
-		loss = outputs.loss
-		losses.append(loss.repeat(Training_Configs.BATCH_SIZE))
+def eval_lm(dataset, model, training_configs, tokenizer):
+    """
+    Evaluate a language model on a validation dataset and compute perplexity.
+    
+    Args:
+        dataset (dict): A dictionary containing the dataset splits, including "validation".
+        model (torch.nn.Module): The language model to evaluate.
+        training_configs (object): Configuration object containing training parameters (e.g., batch size).
+        tokenizer (transformers.PreTrainedTokenizer): The tokenizer used for tokenization.
 
-	
-
-	losses = torch.cat(losses)
-	losses = losses[: len(eval_dataset)]
-	try:
-		perplexity = math.exp(torch.mean(losses))
-	except OverflowError:
-		perplexity = float("inf")
-	return perplexity
+    Returns:
+        float: The computed perplexity of the model on the validation set.
+    """
+    # Extract the validation dataset
+    eval_dataset = dataset["validation"]
+    
+    # Create a DataLoader for the validation dataset
+    eval_dataloader = DataLoader(
+        eval_dataset, 
+        collate_fn=default_data_collator, 
+        batch_size=training_configs.BATCH_SIZE
+    )
+    
+    # Set the model to evaluation mode
+    model.eval()
+    
+    # Store batch losses
+    losses = []
+    
+    # Evaluate the model on the validation dataset
+    for step, batch in enumerate(eval_dataloader):
+        # Disable gradient computation
+        with torch.no_grad():
+            # Move the batch data to the appropriate device (GPU/CPU)
+            batch = {k: v.to(model.device) for k, v in batch.items()}
+            
+            # Forward pass through the model
+            outputs = model(**batch)
+        
+        # Extract the loss and repeat it for batch size
+        loss = outputs.loss
+        losses.append(loss.repeat(training_configs.BATCH_SIZE))
+    
+    # Concatenate losses and ensure the size matches the dataset
+    losses = torch.cat(losses)
+    losses = losses[:len(eval_dataset)]
+    
+    # Compute perplexity
+    try:
+        perplexity = math.exp(torch.mean(losses).item())
+    except OverflowError:
+        perplexity = float("inf")
+    
+    return perplexity
 
 
 
