@@ -387,20 +387,11 @@ def main(config):
 
 	elif MODEL_TYPE in ["GPT","T5","BART"]:
 		if MODEL_TYPE == "GPT":
-			# Load GPT-specific configurations
-			LM_configs = config.GPT  # Assume this holds GPT-specific settings
+			LM_configs = config.GPT
 			model_name_or_path = LM_configs.model_name_or_path
-
-			# Load model configuration
 			model_config = GPT2Config.from_pretrained(model_name_or_path)
-
-			# Load tokenizer
 			tokenizer = GPT2TokenizerFast.from_pretrained(model_name_or_path)
-
-			# Load pre-trained GPT model
 			model = GPT2LMHeadModel.from_pretrained(model_name_or_path, config=model_config)
-
-			# Move model to the specified device (e.g., 'cuda' or 'cpu')
 			model.to(device)
 		elif MODEL_TYPE=="T5":
 			LM_configs = config.T5
