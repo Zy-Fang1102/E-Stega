@@ -418,18 +418,16 @@ def main(config):
 		column_names = raw_datasets["train"].column_names
 		text_column_name = "text" if "text" in column_names else column_names[0]
 
-	# TODO: 这里存在一个问题
+		# TODO: 这里存在一个问题
 		def gpt_tokenize_function(examples):
-			return tokenizer(tokenizer.bos_token+Training_Configs.prompt+examples[text_column_name])
+			return tokenizer(tokenizer.bos_token + Training_Configs.prompt + examples[text_column_name])
 
 		def bart_tokenize_function(examples):
-			return tokenizer(examples[text_column_name])
+			return tokenizer(examples[text_column_name], truncation=True, padding="longest")
 
 		def t5_tokenize_function(examples):
-			# prefix = "steganography generate: "
-			# return tokenizer.prepare_seq2seq_batch(src_texts=examples[text_column_name],tgt_texts=[prefix +text for text in examples[text_column_name]])
-			return tokenizer(examples[text_column_name])
-			# return tokenizer([prefix +text for text in examples[text_column_name]])
+			prefix = "steganography generate: "  # 可根据需要调整前缀
+			return tokenizer([prefix + text for text in examples[text_column_name]], truncation=True, padding="longest")
 
 		if MODEL_TYPE == "GPT":
 			tokenize_function = gpt_tokenize_function
