@@ -262,10 +262,7 @@ def eval_lm(dataset, model, Training_Configs, tokenizer):
 		loss = outputs.loss
 		losses.append(loss.repeat(Training_Configs.BATCH_SIZE))
 
-		y = model(torch.from_numpy(text_in).long().to(device))
-		loss = criteration(y.reshape(-1, vocabulary.vocab_size),
-							   torch.from_numpy(text_target).reshape(-1).long().to(device))
-		eval_loss.append(loss.item())
+	
 
 	losses = torch.cat(losses)
 	losses = losses[: len(eval_dataset)]
