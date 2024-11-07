@@ -435,6 +435,27 @@ def main(config):
 			tokenize_function = t5_tokenize_function
 		elif MODEL_TYPE == "BART":
 			tokenize_function = bart_tokenize_function
+		``````python
+		if MODEL_TYPE == "GPT":
+			tokenize_function = gpt_tokenize_function
+		elif MODEL_TYPE == "T5":
+			tokenize_function = t5_tokenize_function
+		elif MODEL_TYPE == "BART":
+			tokenize_function = bart_tokenize_function
+		``````python
+		if MODEL_TYPE == "GPT":
+			tokenize_function = gpt_tokenize_function
+		elif MODEL_TYPE == "T5":
+			tokenize_function = t5_tokenize_function
+		elif MODEL_TYPE == "BART":
+			tokenize_function = bart_tokenize_function
+		``````python
+		if MODEL_TYPE == "GPT":
+			tokenize_function = gpt_tokenize_function
+		elif MODEL_TYPE == "T5":
+			tokenize_function = t5_tokenize_function
+		elif MODEL_TYPE == "BART":
+			tokenize_function = bart_tokenize_function
 
 
 		tokenized_datasets = raw_datasets.map(
