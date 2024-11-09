@@ -105,7 +105,7 @@ mvn spring-boot:run
 
 #### App version
 
-Download the [APP](https://github.com/your_project_url).
+Download the [APP](https://github.com/Zy-Fang1102/E-Stega/blob/master/APP/E-Stega.exe).
 
 ### Model Parameter Explanation
 
