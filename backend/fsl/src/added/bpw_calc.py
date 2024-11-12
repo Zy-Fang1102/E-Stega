@@ -44,9 +44,8 @@ def bpw(filename):
 
 def obj(obj):
     if not isinstance(obj, dict):
-        return obj
-    d = MyDict()
-    return d
+        return obj  # 如果输入不是字典，直接返回
+    return MyDict(obj)  # 假设 MyDict 支持初始化时传入字典
 
 
 if __name__ == '__main__':
