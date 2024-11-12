@@ -213,6 +213,13 @@ class HuffmanCoding:
         self.codes = {}
         self.reverse_mapping = {}
 
+        self.vocab_size = len(self.word_table)
+
+        self.stoi = {v: int(k) for k, v in self.word_table.items()}
+        self.itos = {int(k): v for k, v in self.word_table.items()}
+
+        self.UNKNOWN_CHAR = self.stoi[UNKNOWN_CHAR]
+
     class HeapNode:
         def __init__(self, char, freq):
             self.char = char
