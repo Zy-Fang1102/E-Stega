@@ -260,14 +260,16 @@ class HuffmanCoding:
             heapq.heappush(self.heap, merged)
 
     def make_codes_helper(self, root, current_code):
-        if (root == None):
+        if root is None:
             return
 
-        if (root.char != None):
+        # 如果当前节点是叶子节点，存储字符对应的编码
+        if root.char is not None:
             self.codes[root.char] = current_code
             self.reverse_mapping[current_code] = root.char
             return
 
+        # 递归处理左子树和右子树
         self.make_codes_helper(root.left, current_code + "0")
         self.make_codes_helper(root.right, current_code + "1")
 
