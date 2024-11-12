@@ -240,9 +240,7 @@ class HuffmanCoding:
     def make_frequency_dict(self, text):
         frequency = {}
         for character in text:
-            if not character in frequency:
-                frequency[character] = 0
-            frequency[character] += 1
+            frequency[character] = frequency.get(character, 0) + 1
         return frequency
 
     def make_heap(self, frequency):
