@@ -246,8 +246,8 @@ class HuffmanCoding:
         return frequency
 
     def make_heap(self, frequency):
-        for key in frequency:
-            node = self.HeapNode(key, frequency[key])
+        for key, freq in frequency.items():
+            node = self.HeapNode(key, freq)
             heapq.heappush(self.heap, node)
 
     def merge_nodes(self):
