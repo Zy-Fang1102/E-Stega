@@ -49,13 +49,18 @@ def obj(obj):
 
 
 if __name__ == '__main__':
+    # # 单独调用 bpw 函数
     # bpw(filename="stego-grouping/reddit-0124-select-10000-with-isolated/grouping")
-    # for bit in range(1,16):
-    #     bpw(filename="../generation/stego-ac/reddit-0124-select-10000-with-isolated/topk-"+str(bit)+"bit")
+
+    # # 批量调用 bpw 函数，对不同的位数范围进行处理
+    # for bit in range(1, 16):
+    #     bpw(filename=f"../generation/stego-ac/reddit-0124-select-10000-with-isolated/topk-{bit}bit")
+
     # for bit in range(1, 6):
-    #     bpw(filename="../generation/stego-hc/reddit-0124-select-10000-with-isolated/huffman-topk-" + str(bit) + "bit")
+    #     bpw(filename=f"../generation/stego-hc/reddit-0124-select-10000-with-isolated/huffman-topk-{bit}bit")
+
     # for bit in range(1, 9):
-    #     bpw(filename="stego-hc/graph/huffman-topk-" + str(bit) + "bit")
+    #     bpw(filename=f"stego-hc/graph/huffman-topk-{bit}bit")
 
     # bpw_jsonlines("generation/encoding/1124-news-ac-oov/stegos-encoding.jsonl")
     # bpw_jsonlines("generation/encoding/1124-news-ac/stegos-encoding.jsonl")
