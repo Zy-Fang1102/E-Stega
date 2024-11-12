@@ -20,18 +20,27 @@ def bpw(filename):
         print(f"{filename} : No words found (division by zero).")
 
 
-def bpw_jsonlines(filename, max_num=None):
-    with open(filename, "r", encoding="utf-8") as f:
-        bits = []
-        tokens = []
-        counter = 0
-        for text in jsonlines.Reader(f):
-            bits += "".join(text["bits"][2:-1])
-            tokens += text["tokens"][2:-1]
-            counter += 1
-            if max_num is not None and counter >= max_num:
-                break
-        print("%s : %s" % (filename, str(len(bits) / len(tokens))))
+    def bpw_jsonlines(filename, max_num=None):
+        import jsonlines
+
+        with open(filename, "r", encoding="utf-8") as f:
+            bits = []
+            tokens = []
+            for counter, text in enumerate(jsonlines.Reader(f), start=1):
+                # 追加处理后的 bits 和 tokens
+                bits.extend(text["bits"][2:-1])
+                tokens.extend(text["tokens"][2:-1])
+
+                # 如果设置了最大数量并达到了限制，则停止
+                if max_num is not None and counter >= max_num:
+                    break
+
+        # 计算并输出比特与标记的比例
+        if tokens:  # 避免除以零
+            ratio = len(bits) / len(tokens)
+            print(f"{filename} : {ratio}")
+        else:
+            print(f"{filename} : No tokens found (division by zero).")
 
 def obj(obj):
     if not isinstance(obj, dict):
