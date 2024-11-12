@@ -275,14 +275,10 @@ class HuffmanCoding:
 
     def make_codes(self):
         root = heapq.heappop(self.heap)
-        current_code = ""
-        self.make_codes_helper(root, current_code)
+        self.make_codes_helper(root, "")
 
     def get_encoded_text(self, text):
-        encoded_text = ""
-        for character in text:
-            encoded_text += self.codes[character]
-        return encoded_text
+        return ''.join(self.codes[character] for character in text)
 
     def pad_encoded_text(self, encoded_text):
         extra_padding = 8 - len(encoded_text) % 8
