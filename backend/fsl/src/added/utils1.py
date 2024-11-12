@@ -215,9 +215,6 @@ class HuffmanCoding:
 
         self.vocab_size = len(self.word_table)
 
-        self.stoi = {v: int(k) for k, v in self.word_table.items()}
-        self.itos = {int(k): v for k, v in self.word_table.items()}
-
         self.UNKNOWN_CHAR = self.stoi[UNKNOWN_CHAR]
 
     class HeapNode:
