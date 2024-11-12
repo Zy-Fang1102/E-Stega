@@ -1,17 +1,23 @@
 import jsonlines
 
 def bpw(filename):
-    bit_file = filename+".bit"
-    text_file = filename+".txt"
+    bit_file = f"{filename}.bit"
+    text_file = f"{filename}.txt"
+
+    # 读取 .bit 文件内容并拼接为一个字符串
     with open(bit_file, "r", encoding="utf-8") as f:
-        bits_lines = f.read().split("\n")
-        bits = "".join(bits_lines)
-    with open(text_file,"r",encoding="utf-8") as f:
-        lines = f.readlines()
-        words = []
-        for line in lines:
-            words+=line.split()[1:]
-    print("%s : %s"%(filename, str(len(bits)/len(words))))
+        bits = "".join(f.read().splitlines())
+
+    # 读取 .txt 文件内容并提取所有单词（从每行的第二个元素开始）
+    with open(text_file, "r", encoding="utf-8") as f:
+        words = [word for line in f for word in line.split()[1:]]
+
+    # 计算并输出比特与单词的比例
+    if words:  # 避免除以零
+        ratio = len(bits) / len(words)
+        print(f"{filename} : {ratio}")
+    else:
+        print(f"{filename} : No words found (division by zero).")
 
 
 def bpw_jsonlines(filename, max_num=None):
