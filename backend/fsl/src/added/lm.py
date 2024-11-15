@@ -39,13 +39,24 @@ class LM(GPT2PreTrainedModel):
 		return logits
 
 	def sample(self, input_ids, attention_mask=None, labels=None):
-		log_prob = self.forward(input_ids,is_training=False)
-		prob = torch.exp(log_prob)[:, -1, :]
-		p, i = prob.sort(descending=True)
-		self.p = p
+		# 获取模型的 log 概率输出（推理模式）
+		log_prob = self.forward(input_ids, is_training=False)
+		
+		# 计算最后一个时间步的概率分布
+		prob = torch.exp(log_prob)[:, -1, :]  # shape: [batch_size, vocab_size]
+		
+		# 按概率从高到低排序
+		p, indices = prob.sort(descending=True)
+		self.p = p  # 保存排序后的概率以供调试或分析
+
+		# 设置特殊处理：将索引 1 的概率置为 0（可根据实际需求调整）
 		prob[:, 1] = 0
-		prob = prob / prob.sum()
-		return torch.multinomial(prob, 1)
+
+		# 归一化概率分布，使其总和为 1
+		prob = prob / prob.sum(dim=-1, keepdim=True)
+
+		# 根据归一化概率分布进行采样，返回采样结果
+		return torch.multinomial(prob, 1)  # shape: [batch_size, 1]
 
 
 class Old_LM(nn.Module):
