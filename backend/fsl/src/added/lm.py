@@ -23,19 +23,28 @@ class LM(GPT2PreTrainedModel):
 		# self.init_weights()
 
 	def forward(self, input_ids, attention_mask=None, labels=None, is_training=True):
-		x = input_ids.long()
-		_ = self.embedding(x)
-		_ = _.permute(1, 0, 2)
-		h_all, __ = self.rnn(_)
-		h_all = h_all.permute(1, 0, 2)
-		_ = self.output_layer(h_all)
-		_ = self.log_softmax(_)
+		# 将输入转换为长整型
+		input_ids = input_ids.long()
+
+		# 通过嵌入层进行处理
+		embeddings = self.embedding(input_ids)
+		embeddings = embeddings.permute(1, 0, 2)  # 调整维度顺序以适配 RNN 的输入
+
+		# 将数据输入 RNN，获取所有隐藏状态 (h_all) 和最终隐藏状态 (__)
+		h_all, _ = self.rnn(embeddings)
+		h_all = h_all.permute(1, 0, 2)  # 调整维度顺序回原始形状
+
+		# 输出层生成 logits
+		logits = self.output_layer(h_all)
+		logits = self.log_softmax(logits)  # 应用 log softmax
+
+		# 训练模式下，计算损失并返回 logits 和损失
 		if is_training:
-			loss = self.criteration(_.reshape(-1, self.vocab_size), labels.reshape(-1))
-			# return {"logits":_, "loss":loss}
-			return _,loss
-		else:
-			return _
+			loss = self.criteration(logits.view(-1, self.vocab_size), labels.view(-1))
+			return logits, loss
+
+		# 推理模式下，仅返回 logits
+		return logits
 
 	def sample(self, input_ids, attention_mask=None, labels=None):
 		log_prob = self.forward(input_ids,is_training=False)
