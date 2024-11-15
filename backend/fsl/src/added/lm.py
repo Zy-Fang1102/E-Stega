@@ -30,14 +30,6 @@ class LM(GPT2PreTrainedModel):
 		embeddings = self.embedding(input_ids)
 		embeddings = embeddings.permute(1, 0, 2)  # 调整维度顺序以适配 RNN 的输入
 
-		# 将数据输入 RNN，获取所有隐藏状态 (h_all) 和最终隐藏状态 (__)
-		h_all, _ = self.rnn(embeddings)
-		h_all = h_all.permute(1, 0, 2)  # 调整维度顺序回原始形状
-
-		# 输出层生成 logits
-		logits = self.output_layer(h_all)
-		logits = self.log_softmax(logits)  # 应用 log softmax
-
 		# 训练模式下，计算损失并返回 logits 和损失
 		if is_training:
 			loss = self.criteration(logits.view(-1, self.vocab_size), labels.view(-1))
