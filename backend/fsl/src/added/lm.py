@@ -128,12 +128,3 @@ class Old_LM(nn.Module):
 			stop_id += 1
 		return ids[0][torch.multinomial(prob[:stop_id]/prob[:stop_id].sum(),1)]
 		# return torch.multinomial(prob, 1)
-
-	def example(self,x):
-		log_prob = self.forward(x)
-		prob = torch.exp(log_prob)[:, -1, :]
-		p, i = prob.sort(descending=True)
-		self.p = p
-		prob = prob / prob.sum()
-		# BOS let us go hiking 2 276 172 144 17552
-		return prob
