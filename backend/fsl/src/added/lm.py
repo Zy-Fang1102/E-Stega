@@ -62,18 +62,25 @@ class LM(GPT2PreTrainedModel):
 class Old_LM(nn.Module):
 	def __init__(self, cell, vocab_size, embed_size, hidden_dim, num_layers, dropout_rates):
 		super(Old_LM, self).__init__()
+
+		# 保存 RNN 单元类型
 		self._cell = cell
 
+		# 词嵌入层：将词汇表中的索引映射到稠密向量空间
 		self.embedding = nn.Embedding(vocab_size, embed_size)
+
+		# 根据指定的 RNN 单元类型（RNN 或 GRU）初始化循环神经网络
 		if cell == 'rnn':
-			self.rnn = nn.RNN(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
+			self.rnn = nn.RNN(embed_size, hidden_dim, num_layers, dropout=dropout_rates, batch_first=True)
 		elif cell == 'gru':
-			self.rnn = nn.GRU(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
-
+			self.rnn = nn.GRU(embed_size, hidden_dim, num_layers, dropout=dropout_rates, batch_first=True)
 		else:
-			raise Exception('no such rnn cell')
+			raise ValueError(f"Unsupported RNN cell type: '{cell}'. Supported types are 'rnn' and 'gru'.")
 
+		# 输出层：将 RNN 的隐藏状态映射到词汇表大小的 logits
 		self.output_layer = nn.Linear(hidden_dim, vocab_size)
+
+		# Log-Softmax 层：将 logits 转换为对数概率分布
 		self.log_softmax = nn.LogSoftmax(dim=2)
 
 	# def forward(self, x):
