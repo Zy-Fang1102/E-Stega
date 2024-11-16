@@ -10,12 +10,18 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 logger = logging.getLogger(__name__)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# e.g. [0, 1, 1, 1] looks like 1110=14
 def bits2int(bits):
-    res = 0
-    for i, bit in enumerate(bits):
-        res += bit * (2 ** i)
-    return res
+    """
+    将二进制位列表转换为整数。
+    位列表中的低位在前，高位在后。
+    
+    Args:
+        bits (list[int]): 二进制位列表，例如 [0, 1, 1, 1] 表示二进制 1110。
+
+    Returns:
+        int: 转换后的整数。
+    """
+    return sum(bit * (2 ** i) for i, bit in enumerate(bits))
 
 def int2bits(inp, num_bits):
     if num_bits == 0:
