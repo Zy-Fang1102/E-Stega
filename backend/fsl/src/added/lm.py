@@ -128,3 +128,9 @@ class Old_LM(nn.Module):
 			stop_id += 1
 		return ids[0][torch.multinomial(prob[:stop_id]/prob[:stop_id].sum(),1)]
 		# return torch.multinomial(prob, 1)
+
+	def sample(self, input_ids, attention_mask=None, labels=None, temperature=1.0):
+		log_prob = self.forward(input_ids, is_training=False)
+		prob = torch.exp(log_prob / temperature)[:, -1, :]  # 使用温度缩放
+		prob = prob / prob.sum(dim=-1, keepdim=True)
+		return torch.multinomial(prob, 1)  # 返回采样结果
