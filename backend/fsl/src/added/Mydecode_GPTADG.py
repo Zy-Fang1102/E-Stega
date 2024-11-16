@@ -24,10 +24,22 @@ def bits2int(bits):
     return sum(bit * (2 ** i) for i, bit in enumerate(bits))
 
 def int2bits(inp, num_bits):
-    if num_bits == 0:
+    """
+    将整数转换为指定位数的二进制位字符串（低位在前）。
+
+    Args:
+        inp (int): 输入的整数。
+        num_bits (int): 需要的二进制位数。
+
+    Returns:
+        str: 低位在前的二进制字符串表示。
+    """
+    if num_bits <= 0:
         return ""
-    strlist = ('{0:0%db}' % num_bits).format(inp)
-    return strlist[::-1]  # 返回字符串形式的比特流，反转顺序以保持正确顺序
+    # 格式化为指定位数的二进制字符串
+    binary_str = f"{inp:0{num_bits}b}"
+    # 返回低位在前的字符串
+    return binary_str[::-1]
 
 def num_same_from_beg(bits1, bits2):
     assert len(bits1) == len(bits2)
