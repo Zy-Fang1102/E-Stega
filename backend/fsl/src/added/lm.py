@@ -151,7 +151,27 @@ class Old_LM(nn.Module):
 		return truncated_indices.gather(1, sampled_indices).squeeze(dim=-1)
 
 	def sample(self, input_ids, attention_mask=None, labels=None, temperature=1.0):
-		log_prob = self.forward(input_ids, is_training=False)
-		prob = torch.exp(log_prob / temperature)[:, -1, :]  # 使用温度缩放
+		"""
+		进行基于温度缩放的采样，返回采样结果。
+
+		Args:
+			input_ids (torch.Tensor): 输入 token IDs，形状为 [batch_size, seq_length]。
+			attention_mask (torch.Tensor, optional): 用于掩盖无效 token 的 attention mask（未使用，保留接口）。
+			labels (torch.Tensor, optional): 标签张量（未使用，保留接口）。
+			temperature (float): 温度系数，用于调整分布的平滑程度。
+
+		Returns:
+			torch.Tensor: 采样的 token 索引，形状为 [batch_size, 1]。
+		"""
+		# 前向传播，获取 log 概率
+		log_prob = self.forward(input_ids, is_training=False)  # 输出形状: [batch_size, seq_length, vocab_size]
+
+		# 获取最后一个时间步的概率分布，并应用温度缩放
+		prob = torch.exp(log_prob[:, -1, :] / temperature)  # 形状: [batch_size, vocab_size]
+
+		# 归一化概率分布（确保概率总和为 1）
 		prob = prob / prob.sum(dim=-1, keepdim=True)
-		return torch.multinomial(prob, 1)  # 返回采样结果
+
+		# 根据概率分布进行采样，返回结果
+		sampled_indices = torch.multinomial(prob, num_samples=1)  # 形状: [batch_size, 1]
+		return sampled_indices
