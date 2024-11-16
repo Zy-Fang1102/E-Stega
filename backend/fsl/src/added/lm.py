@@ -109,25 +109,46 @@ class Old_LM(nn.Module):
 		return torch.multinomial(prob, 1)
 
 	def topp_sample(self, x, topp=0.99, forbidden=[1]):
-		log_prob = self.forward(x)
-		prob = torch.exp(log_prob)[:, -1, :]
-		p, i = prob.sort(descending=True)
-		self.p = p
-		if forbidden is not None:
+		# 获取 log 概率并计算概率分布
+		log_prob = self.forward(x, is_training=False)
+		prob = torch.exp(log_prob)[:, -1, :]  # 获取最后一个时间步的概率分布
+
+		# 按概率从高到低排序
+		sorted_prob, sorted_indices = prob.sort(descending=True, dim=-1)
+
+		# 屏蔽 forbidden 中指定的 token
+		if forbidden:
 			for forbidden_ind in forbidden:
 				prob[:, forbidden_ind] = 0
-		prob, ids = prob.sort(descending=True)
-		prob = prob/prob.sum()
-		log_prob = self.forward(x)
-		prob = torch.exp(log_prob)[:, -1, :]
-		p, i = prob.sort(descending=True)
-		cum_prob = prob.cumsum(1)
-		cum_prob_flags = cum_prob > topp
-		stop_id = cum_prob_flags.nonzero(as_tuple=True)[1][0]
-		if stop_id == 0 :
-			stop_id += 1
-		return ids[0][torch.multinomial(prob[:stop_id]/prob[:stop_id].sum(),1)]
-		# return torch.multinomial(prob, 1)
+
+		# 按概率重新排序（避免屏蔽后概率分布不一致）
+		sorted_prob, sorted_indices = prob.sort(descending=True, dim=-1)
+
+		# 计算累积概率，并找到超过 `topp` 的截断位置
+		cum_prob = sorted_prob.cumsum(dim=-1)  # shape: [batch_size, vocab_size]
+		cutoff_mask = cum_prob > topp  # 标记超过 `topp` 的位置
+		cutoff_index = cutoff_mask.nonzero(as_tuple=True)  # 获取截断位置
+		if cutoff_index[1].numel() > 0:
+			stop_id = cutoff_index[1][0]  # 获取第一个超过 `topp` 的索引
+		else:
+			stop_id = sorted_prob.size(1)  # 如果没有超过 `topp` 的 token，使用所有 token
+
+		# 如果 `stop_id` 为 0，至少保留一个 token
+		if stop_id == 0:
+			stop_id = 1
+
+		# 选取截断后的 token 和概率
+		truncated_prob = sorted_prob[:, :stop_id]
+		truncated_indices = sorted_indices[:, :stop_id]
+
+		# 归一化概率分布
+		truncated_prob = truncated_prob / truncated_prob.sum(dim=-1, keepdim=True)
+
+		# 根据归一化后的概率分布进行采样
+		sampled_indices = torch.multinomial(truncated_prob, 1)  # shape: [batch_size, 1]
+
+		# 返回采样的 token
+		return truncated_indices.gather(1, sampled_indices).squeeze(dim=-1)
 
 	def sample(self, input_ids, attention_mask=None, labels=None, temperature=1.0):
 		log_prob = self.forward(input_ids, is_training=False)
