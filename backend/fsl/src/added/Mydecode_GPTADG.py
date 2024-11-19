@@ -59,25 +59,36 @@ def find_nearest_list(prob, delta,):
     tmp_idx = np.argmin(diff**2)
     if prob[tmp_idx] < delta:
         return_list = [tmp_idx]
-        if tmp_idx == len(prob) -1:
-            pass
+        
+        # 如果已经是最后一个元素，直接返回当前索引
+        if tmp_idx == len(prob) - 1:
+            return return_list
         else:
+            # 向后累加索引，直到累加概率超过 delta 或到达末尾
             tmp_sum = prob[tmp_idx]
-            for i in range(tmp_idx+1, len(prob)-1):
-                if delta>(tmp_sum + prob[i]):
+            for i in range(tmp_idx + 1, len(prob) - 1):
+                if delta > (tmp_sum + prob[i]):
                     tmp_sum += prob[i]
                     return_list.append(i)
-        return return_list
-    elif tmp_idx >= len(prob)-2:
+            return return_list
+
+    # 如果当前索引已经接近列表末尾，直接返回当前索引
+    elif tmp_idx >= len(prob) - 2:
         return [tmp_idx]
+
     else:
+        # 向后递归查找，寻找更合适的索引列表
         new_idx = tmp_idx + 1
         idx = [new_idx]
-        idx += find_nearest_list(prob[new_idx+1:], delta-prob[new_idx])
+        # 递归查找后续部分
+        idx += find_nearest_list(prob[new_idx + 1:], delta - prob[new_idx], 0, diff)
+
+        # 调整递归返回的索引以匹配原始列表
         for i in range(1, len(idx)):
-            idx[i] += new_idx+1
-        # return idx
-        if (delta-np.sum(np.array(prob)[idx]))**2 > diff[tmp_idx]**2:
+            idx[i] += new_idx + 1
+
+        # 检查递归结果是否比当前结果更优
+        if (delta - np.sum(np.array(prob)[idx]))**2 > diff[tmp_idx]**2:
             return [tmp_idx]
         else:
             return idx
