@@ -24,14 +24,14 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def bits2int(bits):
     res = 0
-    for i, bit in enumerate(bits):
-        res += bit * (2 ** i)
+    # for i, bit in enumerate(bits):
+    #     res += bit * (2 ** i)
     return res
 
 
 def int2bits(inp, num_bits):
-    if num_bits == 0:
-        return []
+    # if num_bits == 0:
+    #     return []
     strlist = ('{0:0%db}' % num_bits).format(inp)
     return [int(strval) for strval in reversed(strlist)]
 
