@@ -30,8 +30,8 @@ def bits2int(bits):
 
 
 def int2bits(inp, num_bits):
-    # if num_bits == 0:
-    #     return []
+    if num_bits == 0:
+        return []
     strlist = ('{0:0%db}' % num_bits).format(inp)
     return [int(strval) for strval in reversed(strlist)]
 
