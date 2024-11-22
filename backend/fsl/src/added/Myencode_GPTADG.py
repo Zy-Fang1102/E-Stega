@@ -224,8 +224,8 @@ def main(Config, bit_stream_file):
                     stega_bit = [''] * (input_ids.shape[-1]+1)
                     logits = model(input_ids).logits[:, -1, :]
                     logits -= logits.max()
-                    probs = torch.exp(logits)
-                    for forbidden_id in [tokenizer.bos_token_id, tokenizer.eos_token_id, tokenizer.unk_token_id]:
+                    forbidden_tokens = Generation_Configs['forbidden_tokens']
+                    for forbidden_id in forbidden_tokens:
                         probs[:, forbidden_id] = 0
                     for forbidden_id in range(256):
                         probs[:, forbidden_id] = 0
