@@ -6,6 +6,7 @@ import json
 import os
 import jsonlines
 import logging
+from tqdm import tqdm
 # import Huffman_Encoding
 
 from transformers import (
