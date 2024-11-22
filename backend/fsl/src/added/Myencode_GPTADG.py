@@ -29,11 +29,11 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 #     return res
 
 
-# def int2bits(inp, num_bits):
-#     if num_bits == 0:
-#         return []
-#     strlist = ('{0:0%db}' % num_bits).format(inp)
-#     return [int(strval) for strval in reversed(strlist)]
+def int2bits(inp, num_bits):
+    if num_bits == 0:
+        return []
+    strlist = ('{0:0%db}' % num_bits).format(inp)
+    return [int(strval) for strval in reversed(strlist)]
 
 
 def num_same_from_beg(bits1, bits2):
