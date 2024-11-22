@@ -69,6 +69,13 @@ def near(alist, anum):
 def ADG_encoder(prob, bit_stream, bit_index, Generation_Configs):
     prob, indices = prob.sort(descending=True)
     # start recursion
+    prob = prob.tolist()
+    indices = indices.tolist()
+    result = [[[], []] for _ in range(2 ** bit)]  # 使用生成器表达式
+    for i in range(2 ** bit - 1):
+        ...
+        prob.pop(0)  # 替换 del 为 pop
+        indices.pop(0)
     bit_tmp = 0
     while prob[0] <= 0.5:
         # embedding bit
@@ -163,6 +170,21 @@ def main(Config, bit_stream_file):
         total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
         logger.info("Trainable params: {:d}".format(total_trainable_params))
 
+        log_file_path = os.path.join(Training_Configs['output_dir'], "generation.log")
+        logging.basicConfig(
+            format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
+            datefmt="%m/%d/%Y %H:%M:%S",
+            level=logging.INFO,
+            handlers=[
+                logging.FileHandler(log_file_path),
+                logging.StreamHandler()
+            ]
+        )
+
+        logger.info("开始加载模型...")
+        logger.info(f"模型加载路径: {Training_Configs['model_name_or_path']}")
+        logger.info("加载比特流文件...")
+        logger.info(f"比特流文件路径: {bit_stream_file}")
 
         Generation_Configs = Config.Generation
         logger.info("Generation Configs")
