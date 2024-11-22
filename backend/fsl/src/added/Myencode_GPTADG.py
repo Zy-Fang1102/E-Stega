@@ -69,13 +69,6 @@ def near(alist, anum):
 def ADG_encoder(prob, bit_stream, bit_index, Generation_Configs):
     prob, indices = prob.sort(descending=True)
     # start recursion
-    prob = prob.tolist()
-    indices = indices.tolist()
-    result = [[[], []] for _ in range(2 ** bit)]  # 使用生成器表达式
-    for i in range(2 ** bit - 1):
-        ...
-        prob.pop(0)  # 替换 del 为 pop
-        indices.pop(0)
     bit_tmp = 0
     while prob[0] <= 0.5:
         # embedding bit
