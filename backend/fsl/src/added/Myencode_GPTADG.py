@@ -189,8 +189,10 @@ def main(Config, bit_stream_file):
         logger.info("loading bits stream from cache %s" %bit_stream_file)
         with open(bit_stream_file, 'r', encoding='utf8') as f:
             bit_stream = f.read().strip()
-            bit_stream += bit_stream
-            bit_stream += bit_stream
+            bit_stream = bit_stream * 3  # 合理扩展长度
+            random.shuffle(bit_stream)
+
+            bit_index = random.randint(0, len(bit_stream) - 1)  # 修复随机索引
         bit_stream = list(bit_stream)
         random.shuffle(bit_stream)
         random.shuffle(bit_stream)
