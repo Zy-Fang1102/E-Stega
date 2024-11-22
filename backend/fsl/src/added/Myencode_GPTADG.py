@@ -149,7 +149,12 @@ def main(Config, bit_stream_file):
         if Training_Configs.model_type == "GPT":
             LM_Configs = Config.GPT
             tokenizer = GPT2Tokenizer.from_pretrained(LM_Configs.model_name_or_path)
-            model = GPT2LMHeadModel.from_pretrained(LM_Configs.model_name_or_path)
+            # 模型加载异常捕获
+            try:
+                model = GPT2LMHeadModel.from_pretrained(Training_Configs['model_name_or_path'])
+            except Exception as e:
+                logger.error(f"模型加载失败，请检查路径: {Training_Configs['model_name_or_path']}")
+                exit(1)
             model.to(device)
 
 
