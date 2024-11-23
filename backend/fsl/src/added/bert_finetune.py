@@ -139,9 +139,12 @@ scheduler = get_linear_schedule_with_warmup(optimizer,
 
 # 计算 真值labels 与 预测值preds 的 accuracy
 def accuracy(labels, preds):
-    preds = np.argmax(preds, axis=1).flatten() # shape = (1, :)
+    preds = np.argmax(preds, axis=1).flatten()  # shape = (1, :)
     labels = labels.flatten()
-    acc = np.sum(preds == labels) / len(preds) # 准确率
+    if len(preds) != len(labels):  # 增加数据长度一致性检查
+        logging.warning("Mismatch in predictions and labels length.")
+        return 0.0
+    acc = np.sum(preds == labels) / len(preds)  # 准确率
     return acc
 
 train_loss = []
