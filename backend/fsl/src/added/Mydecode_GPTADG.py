@@ -124,13 +124,13 @@ def decode_stego_text(stego_text):
 
     # Generate the decoded bit_stream
     with torch.no_grad():
-        # 增加max_length
+        # 添加 pad_token_id 参数，确保生成的序列中不会因缺省而出错
         output = model.generate(
             input_ids=stego_tokens["input_ids"],
             attention_mask=stego_tokens["attention_mask"],
-            max_length=stego_tokens["attention_mask"].shape[1] + 100,  # 增加max_new_tokens
+            max_length=stego_tokens["attention_mask"].shape[1] + 100,
             do_sample=False,
-            pad_token_id=tokenizer.eos_token_id,  # 设置pad_token_id为eos_token_id
+            pad_token_id=tokenizer.eos_token_id,  # 设置 pad_token_id 为 eos_token_id
         )
         decoded_tokens = output[:, stego_tokens["attention_mask"].shape[1]:]
 
