@@ -241,7 +241,12 @@ def main(stego_text_file):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="argument for decoding")
-    parser.add_argument("--stego_text_file", type=str, default="generation/encoding/GPT2/MyGPTADG-stegos-encoding-test.jsonl")
+    parser.add_argument(
+        "--stego_text_file",
+        type=str,
+        default="generation/encoding/GPT2/MyGPTADG-stegos-encoding-test.jsonl",
+        help="待解码的stego文本文件路径，默认值为 'generation/encoding/GPT2/MyGPTADG-stegos-encoding-test.jsonl'"
+    )
     args = parser.parse_args()
 
     main(args.stego_text_file)
