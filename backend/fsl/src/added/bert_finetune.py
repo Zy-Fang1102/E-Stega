@@ -240,10 +240,9 @@ sentences = ["[CLS] " + sen + " [SEP]" for sen in sentences]
 sentences_tokens = [tokenizer.tokenize(sen) for sen in sentences]
 # token --> id
 sentence_ids = [tokenizer.convert_tokens_to_ids(sen) for sen in sentences_tokens]
-# 将所有语句的长度固定到 max_len
-sentence_ids = pad_sequences(sentence_ids, maxlen=max_len, dtype='long', truncating='post', padding='post')
-# 根据 sentence_ids 创建 attention mask
-attention_mask = [[1 if id > 0 else 0 for id in sen] for sen in sentence_ids]
+encoded_data = tokenizer(sentences, padding="max_length", truncation=True, max_length=max_len, return_tensors="pt")
+sentence_ids = encoded_data["input_ids"]
+attention_mask = encoded_data["attention_mask"]
 print(attention_mask[0])
 # 数据类型转换，全部转换为 tensor
 sentence_ids = torch.tensor(sentence_ids)
