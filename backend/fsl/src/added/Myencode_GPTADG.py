@@ -21,6 +21,8 @@ from transformers import (
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 logger = logging.getLogger(__name__)
+if torch.cuda.device_count() > 1:
+    model = torch.nn.DataParallel(model)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # def bits2int(bits):
