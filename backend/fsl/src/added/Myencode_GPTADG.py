@@ -18,6 +18,8 @@ from transformers import (
     BartTokenizer
 )
 
+import time
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 logger = logging.getLogger(__name__)
@@ -293,6 +295,19 @@ if __name__ == '__main__':
     parser.add_argument("--config_path", type=str, default="./Configs/GPT2ADG_test.json")
     args = parser.parse_args()
     Config = utils.Config(args.config_path).get_configs()
+
+    output_file = os.path.join(
+        Training_Configs['output_dir'], 
+        f"MyGPTADG-stegos-encoding-{time.strftime('%Y%m%d-%H%M%S')}.jsonl"
+    )
+
+    f.write({
+        "stego": "_BOS " + tokenizer.decode(stega_sentence) + " _EOS",
+        "tokens": stega_sentence,
+        "idx": stega_idx,
+        "bits": stega_bit,
+        "timestamp": time.strftime('%Y-%m-%d %H:%M:%S')  # 增加时间戳
+    })
 
     # 然后将它作为参数传递给主函数main：
     main(Config, bit_stream_file=bit_stream_file_path)
