@@ -10,7 +10,7 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 logger = logging.getLogger(__name__)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-def bits2int(bits):
+def bits_to_int(bits):
     """
     将二进制位列表转换为整数。
     位列表中的低位在前，高位在后。
@@ -23,7 +23,7 @@ def bits2int(bits):
     """
     return sum(bit * (2 ** i) for i, bit in enumerate(bits))
 
-def int2bits(inp, num_bits):
+def int_to_bits(inp, num_bits):
     """
     将整数转换为指定位数的二进制位字符串（低位在前）。
 
@@ -36,9 +36,7 @@ def int2bits(inp, num_bits):
     """
     if num_bits <= 0:
         return ""
-    # 格式化为指定位数的二进制字符串
     binary_str = f"{inp:0{num_bits}b}"
-    # 返回低位在前的字符串
     return binary_str[::-1]
 
 def num_same_from_beg(bits1, bits2):
