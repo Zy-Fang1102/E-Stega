@@ -191,7 +191,7 @@ for i in tqdm(range(EPOCHS), desc='Epoch'):
     
     for batch in eval_dataloader:
         # 部署到GPU
-        batch = tuple(data.to(device) for data in batch_data)
+        batch = tuple(data.to(device) for data in batch)  # 修正为 batch
         # 解析
         inputs_ids, inputs_masks, inputs_labels = batch
         # 验证阶段不需要计算梯度
