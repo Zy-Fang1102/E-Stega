@@ -175,6 +175,8 @@ for i in tqdm(range(EPOCHS), desc='Epoch'):
         tr_steps += 1
         # 反向传播
         loss.backward()
+        # 梯度裁剪，防止梯度爆炸
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         # 更新参数
         optimizer.step()
         # 更新学习率
