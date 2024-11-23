@@ -209,7 +209,18 @@ for i in tqdm(range(EPOCHS), desc='Epoch'):
         preds = preds['logits'].detach().to('cpu').numpy() # 将preds从计算图剥离，不计算梯度
         labels = inputs_labels.to('cpu').numpy()
         # 计算 accuracy
+        from sklearn.metrics import confusion_matrix
+        import seaborn as sns
+
+        # 在计算验证准确率后加入混淆矩阵绘制
         eval_acc += accuracy(labels, preds)
+        cm = confusion_matrix(labels, np.argmax(preds, axis=1))  # 计算混淆矩阵
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+        plt.title("Confusion Matrix")
+        plt.xlabel("Predicted Labels")
+        plt.ylabel("True Labels")
+        plt.show()
         
         eval_steps += 1
     
