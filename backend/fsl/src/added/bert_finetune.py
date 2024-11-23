@@ -262,8 +262,7 @@ labels = torch.tensor(labels)
 # 数据打包
 # Create a new labels tensor with the same number of samples as sentence_ids and attention_mask
 test_dataset = TensorDataset(sentence_ids, attention_mask, labels)
-# 一批一批地读取数据
-test_dataloader = DataLoader(test_dataset, batch_size, shuffle=True)
+test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)  # 修正 shuffle 为 False
 
 # 模型测试
 model.eval()
