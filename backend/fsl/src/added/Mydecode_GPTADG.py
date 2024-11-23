@@ -130,17 +130,11 @@ def ADG_decoder(prob, prev, **kwargs):
         while (1 / 2 ** (bit + 1)) > prob[0]:
             bit += 1
         mean = 1 / 2 ** bit
-        # dp
-        prob = prob.tolist()
-        indices = indices.tolist()
-        result = []
-        for i in range(2 ** bit):
-            result.append([[], []])
+
+        # 替换 del 操作为 pop，提高性能
         for i in range(2 ** bit - 1):
-            result[i][0].append(prob[0])
-            result[i][1].append(indices[0])
-            del (prob[0])
-            del (indices[0])
+            result[i][0].append(prob.pop(0))
+            result[i][1].append(indices.pop(0))
             while sum(result[i][0]) < mean:
                 delta = mean - sum(result[i][0])
                 index = near(prob, delta)
