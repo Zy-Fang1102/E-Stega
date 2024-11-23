@@ -183,7 +183,7 @@ for i in tqdm(range(EPOCHS), desc='Epoch'):
         scheduler.step()
         
     
-    print("Training loss : {}".format(tr_loss / tr_steps))
+    logging.info(f"Epoch {i + 1}/{EPOCHS} - Training Loss: {tr_loss / tr_steps}")
     
     
     # 模型验证
