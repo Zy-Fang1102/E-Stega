@@ -7,6 +7,16 @@ import numpy as np
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
+log_file_path = "generation/decoding/logs/decoding.log"
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.INFO,
+    handlers=[
+        logging.FileHandler(log_file_path),
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger(__name__)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
