@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 
+import time
 import jsonlines
 import numpy as np
 import torch
@@ -233,7 +234,10 @@ def main(stego_text_file):
             #print(stego_text)
             decoded_bit_stream = decode_stego_text(stego_text)
             with jsonlines.open(os.path.join("generation/decoding/GPT2", "MyGPTADGstegos-decoding-test.jsonl"), "a") as writer:
-                writer.write({"decoded_bit_stream": decoded_bit_stream})
+                writer.write({
+                    "decoded_bit_stream": decoded_bit_stream,
+                    "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+                })
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="argument for decoding")
