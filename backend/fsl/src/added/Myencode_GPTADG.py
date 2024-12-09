@@ -115,6 +115,18 @@ def ADG_encoder(prob, bit_stream, bit_index, Generation_Configs):
     num_bits_encoded = bit_tmp
     return prev, num_bits_encoded
 
+def bits2int_one(bits):
+    res = 0
+    for i, bit in enumerate(bits):
+        res += bit * (2 ** i)
+    return res
+
+
+def int2bits_low(inp, num_bits):
+    if num_bits == 0:
+        return []
+    strlist = ('{0:0%db}' % num_bits).format(inp)
+    return [int(strval) for strval in reversed(strlist)]
 
 def main(Config, bit_stream_file):
     # Setup logging
