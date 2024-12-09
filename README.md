@@ -81,7 +81,7 @@ mvn spring-boot:run
 
 ### APP端
 
-下载[APP](https://github.com/your_project_url)即可。
+下载[APP](https://github.com/your_project_url)即可。（正在完善）
 
 
 
