@@ -79,9 +79,9 @@ mvn spring-boot:run
 
 5. 部署完成后，我们提供了使用演示视频以供参考，详情见于[Web端系统演示](https://pan.baidu.com/s/118QCpemKKjNa3ayCxTY9hA?pwd=ge9y)。
 
-### APP端
+### APP端（尚处于开发阶段，目前仅有demo可供参考）
 
-下载[APP](https://github.com/your_project_url)即可。（正在完善）
+下载[APP](https://github.com/your_project_url)即可。
 
 
 
