@@ -1,93 +1,153 @@
-# E-Stega：基于RuoYi框架的高性能恶意隐写载体检测系统
+
+
+# E-Stega
+
+**E-Stega: A High-Performance Malicious Steganography Carrier Detection System Based on the RuoYi Framework**
+
+<!-- PROJECT SHIELDS -->
+
+[![Contributors][contributors-shield]][contributors-url] [![watchers][watchers-shield]][watchers-url] [![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url] [![MIT License][license-shield]][license-url]
+
+<!-- PROJECT LOGO -->
+<br />
+
+<p align="center">
+  <a href="https://github.com/Zy-Fang1102/E-Stega/">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
+  <h3 align="center">E-Stega</h3>
+  <p align="center">
+    A High-Performance Malicious Steganography Carrier Detection System Based on the RuoYi Framework
+    <br />
+    <a href="https://github.com/Zy-Fang1102/E-Stega/"><strong>Explore the documentation of this project »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/Zy-Fang1102/E-Stega/blob/master/README_En.md">English</a>
+    ·
+    <a href="https://github.com/Zy-Fang1102/E-Stega/blob/master/README.md">中文</a>
+
+
+  </p>
+
+</p>
+
+### Project vision
+
+​	Cryptography, as a discipline with a long history, has seen modern encryption and decryption technologies become very mature, with numerous related tools and platforms emerging online, gradually improving in functionality. However, steganography only found its rapid development opportunity with the rise of generative artificial intelligence technologies in recent years.
+
+​	Therefore, we decided to develop a system aimed at ordinary users, with high-performance steganalysis capabilities. We believe that the development of this system will provide users with an easy-to-use and powerful steganography detection tool. Currently, the project is still under continuous improvement, but we firmly believe that **once the first step is taken, the second and third steps will follow...**.
+
+### Project Objectives
+
+- **Develop an efficient and user-friendly steganalysis tool** to help ordinary users detect and analyze steganographic information.
+- **Leverage deep learning technology** to improve the accuracy and efficiency of steganography detection.
+- **Provide a visual analysis interface** that allows users to intuitively understand the existence of steganographic information and its potential threats.
+- **Target a wide range of application scenarios**, covering various mediums such as images, audio, and text, to address the needs of different users.
 
 
 
-## 项目愿景
+### System Introduction
 
-​	密码学作为一门历史悠久的学科，现代加解密技术已经非常成熟，且相关的工具和平台在网络上层出不穷，功能也逐步趋于完善。然而，隐写术直到近几年生成式人工智能技术的兴起才迎来了快速发展的契机。
+​	**E-Stega** is a high-performance malicious steganography carrier detection system. The system consists of key modules such as **Basic Model, Data Preprocessing Module, MC Dropout Approximate Bayesian Module, Information Gain Calculation Module, Local Sampler Module, and Semi-supervised Model Fine-tuning Module**, ensuring that the system can efficiently detect malicious steganography carriers while significantly reducing system implementation costs, particularly the cost of data labeling.
 
-​	因此，我们决定着手开发一套面向普通用户、具有高性能隐写分析能力的系统。我们相信，这一系统的研发够为广大用户提供易用且功能强大的隐写检测工具。目前，该项目仍在不断完善中，但我们坚信，**迈出第一步，就会有第二步、第三步......**。
+### Design and Implementation
 
-### 项目目标
+- [Technical Design Specification](https://github.com/Zy-Fang1102/E-Stega/blob/master/技术设计说明.pdf)
 
-- **开发一套高效、易用的隐写分析工具**，帮助普通用户检测和分析隐写信息。
-- **借助深度学习技术**，提升隐写检测的精度和效率。
-- **提供可视化的分析界面**，使得用户能够直观地理解隐写信息的存在与潜在威胁。
-- **面向广泛应用场景**，涵盖图像、音频、文本等多种载体，解决不同用户需求。
+- [System Implementation Specification](https://github.com/Zy-Fang1102/E-Stega/tree/master/系统实现说明.pdf)
 
-### 联系方式 
+### System Functions
 
-- **邮箱**: [fangzy@bupt.edu.cn](mailto:fangzy@bupt.edu.cn)
+- **Detection Overview Display**: Provides a visual overview analysis of daily detection results.
+- **Real-time System Monitoring**: Monitors system cache, CPU usage, GPU load, and other information in real time to prevent malicious attacks.
+- **Target Steganography Detection**: Uses a trained small sample learning model to perform high-precision steganography analysis on target carriers.
+- **Information Crawling**: Crawls information carriers such as audio, images, text, etc., from specified social media websites.
+- **Detection Result Analysis**: Includes but is not limited to word cloud analysis, malicious probability analysis, detection model visualization, etc.
 
-- **GitHub**: [Zy-Fang1102/E-Stega](https://github.com/Zy-Fang1102/E-Stega)
+### Deployment and Usage Instructions
 
+This system has two deployment modes: **Web version** and **App version**.
 
-
-## 系统简介
-
-​	**E-Stega** 是一套高性能恶意隐写载体检测系统。系统由**基础模型构建、数据预处理模块、MC Dropout近似贝叶斯模块、信息增益计算模块、局部采样器模块和半监督模型微调模块**等关键模块组成，确保了系统可以高效完成对恶意隐写载体的检测，同时大大降低系统实现成本，特别是数据标注成本。
-
-## 设计与实现
-
-- [技术设计说明](https://github.com/Zy-Fang1102/E-Stega/blob/master/技术设计说明.pdf)
-- [系统实现说明](https://github.com/Zy-Fang1102/E-Stega/tree/master/系统实现说明)
-
-## 系统功能
-
-- **检测总览显示**：针对每日检测情况做可视化总览分析。
-- **系统状态实时监控**：实时监控系统的缓存、CPU使用率、GPU负载等信息，预防恶意攻击。
-- **目标隐写检测**：使用训练好的小样本学习模型完成对载体目标的高精度隐写分析。
-- **信息爬取**：对指定社交媒体网站爬取信息载体，如音频、图像、文本等。
-- **检测结果分析**：包括但不限于词云分析，恶意概率分析，检测模型可视化等。
-
-## 部署与使用说明
-
-本系统有**网页端**和**APP端**两种部署模式。
-
-0. **克隆仓库**：
+0. **Clone the repository**：
 
 ```cmd
-git clone https://github.com/Zy-Fang1102/E-Stega.git
+git clone  https://github.com/Zy-Fang1102/E-Stega.git
 cd E-Stega
 ```
 
-### 网页端
+#### Web version
 
-1. **安装依赖**：
+1. **Install dependencies**：
 
 ```cmd
 pip install -r requirements.txt
 ```
 
-2. **启动redis服务**：
+2. **Start the Redis service**：
 
 ```cmd
  .\redis-server.exe .\redis.windows.conf
 ```
 
-3. **在frontend目录下启动前端服务**：
+3. **Start the frontend service in the `frontend` directory**：
 
 ```cmd
 npm run dev
 ```
 
-4. **在backend目录下启动后端服务**：
+4. **Start the backend service in the `backend` directory**：
 
 ```cmd
 mvn spring-boot:run
 ```
 
-5. 部署完成后，我们提供了使用演示视频以供参考，详情见于[Web端系统演示](https://pan.baidu.com/s/118QCpemKKjNa3ayCxTY9hA?pwd=ge9y)。
+5. After the deployment is complete, we provide a demo video for reference. For details, see [Web version system demo](https://pan.baidu.com/s/118QCpemKKjNa3ayCxTY9hA?pwd=ge9y).
 
-### APP端
+#### App version
 
-下载[APP](https://github.com/your_project_url)即可。
+Download the [APP](https://github.com/your_project_url).
+
+### Model Parameter Explanation
+
+| Max sequence length | Number of unlabeled samples randomly selected each time | Learning rate | Fine-tuning epoch | Fine-tuning batch size | self-training epoch | self-training batch size | Number of MC Dropout forward passes | Sample selection rate | Sample stability weight coefficient $$\alpha$$ |
+| :-----------------: | :-----------------------------------------------------: | :-----------: | :---------------: | :--------------------: | :-----------------: | :----------------------: | :---------------------------------: | :-------------------: | :--------------------------------------------: |
+|         128         |                          4096                           |  3$$e^{-5}$$  |        100        |           4            |         25          |            32            |                 30                  |          25           |                      0.1                       |
 
 
 
-## 模型参数说明
+### How to contribute to open source projects
 
-| 最大序列长度 | 每次随机选取的未标记样本数量 |   学习率    | 微调epoch | 微调batch size | 自训练epoch | 自训练batch size | MC Dropout前向传播次数 | 样本选择比 | 样本稳定性权重系数 $$\alpha$$ |
-| :----------: | :--------------------------: | :---------: | :-------: | :------------: | :---------: | :--------------: | :--------------------: | :--------: | :---------------------------: |
-|     128      |             4096             | 3$$e^{-5}$$ |    100    |       4        |     25      |        32        |           30           |     25     |              0.1              |
+Contributions make the open source community an excellent place for learning, inspiration, and creation. Any contribution you make is **greatly appreciated**.
 
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Author
+
+[fangzy@bupt.edu.cn](mailto:fangzy@bupt.edu.cn)
+
+qq: 1577322025
+
+*You can also view all the developers who contributed to the project in the list of contributors.*
+
+### Copyright Notice
+
+This project is licensed under the MIT License. For more details, please refer to the [LICENSE](https://github.com/Zy-Fang1102/E-Stega/blob/master/LICENSE).
+
+<!-- links -->
+
+[contributors-shield]: https://img.shields.io/github/contributors/Zy-Fang1102/E-Stega.svg?style=flat-square
+[contributors-url]: https://github.com/Zy-Fang1102/E-Stega/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Zy-Fang1102/E-Stega.svg?style=flat-square
+[forks-url]: https://github.com/Zy-Fang1102/E-Stega/network/members
+[stars-shield]: https://img.shields.io/github/stars/Zy-Fang1102/E-Stega.svg?style=flat-square
+[stars-url]: https://github.com/Zy-Fang1102/E-Stega/stargazers
+[license-shield]: https://img.shields.io/github/license/Zy-Fang1102/E-Stega.svg?style=flat-square
+[license-url]: https://github.com/Zy-Fang1102/E-Stega/blob/master/LICENSE.txt
+
+[watchers-shield]: https://img.shields.io/github/watchers/Zy-Fang1102/E-Stega.svg?style=flat-square
+[watchers-url]: https://github.com/Zy-Fang1102/E-Stega/watchers
