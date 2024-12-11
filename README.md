@@ -30,6 +30,7 @@
     <a href="https://github.com/Zy-Fang1102/E-Stega/blob/master/README_En">English</a>
     ·
     <a href="https://github.com/Zy-Fang1102/E-Stega/blob/master/README.md">中文</a>
+
   </p>
 
 </p>
@@ -151,4 +152,5 @@ qq: 1577322025
 [issues-shield]: https://img.shields.io/github/issues/Zy-Fang1102/E-Stega.svg?style=flat-square
 [issues-url]: https://img.shields.io/github/issues/Zy-Fang1102/E-Stega.svg
 [license-shield]: https://img.shields.io/github/license/Zy-Fang1102/E-Stega.svg?style=flat-square
-[license-url]: https://github.com/Zy-Fang1102/E-Stega/blob/master/LICENSE
+[license-url]: https://github.com/Zy-Fang1102/E-Stega/blob/master/LICENSE.txt
+

@@ -40,6 +40,7 @@ GLOBAL_SEED = 42
 
 logger.info("Global seed {}".format(GLOBAL_SEED))
 
+
 if __name__ == '__main__':
 
     # construct the argument parse and parse the arguments
