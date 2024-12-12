@@ -155,9 +155,10 @@ class UNK_Vocabulary(object):
 		self.unk_distribution = self.unk_distribution/np.sum(self.unk_distribution)
 		start_word_distribution = sorted(collections.Counter(start_words).items(), key=lambda x: x[1], reverse=True)
 		self.start_unk_distribution = []
-		for (w,c) in start_word_distribution:
-			if c <= self._word_drop:
-				self.start_unk_distribution.append(c)
+		for (word, value) in word_distribution:
+			if value <= self._word_drop:
+				self.w2i[word] = len(self.w2i)
+				self.i2w[len(self.i2w)] = word
 		self.start_unk_distribution = np.array(self.start_unk_distribution)
 		self.start_unk_distribution = self.start_unk_distribution/np.sum(self.start_unk_distribution)
 
