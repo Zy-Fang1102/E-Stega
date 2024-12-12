@@ -90,10 +90,10 @@ class Vocabulary(object):
 		self.token_num = len(words_all)
 		word_distribution = sorted(collections.Counter(words_all).items(), key=lambda x: x[1], reverse=True)
 		self.vocab_size_raw = len(word_distribution)
-		for (word, value) in word_distribution:
-			if value > self._word_drop:
-				self.w2i[word] = len(self.w2i)
-				self.i2w[len(self.i2w)] = word
+		# for (word, value) in word_distribution:
+		# 	if value > self._word_drop:
+		# 		self.w2i[word] = len(self.w2i)
+		# 		self.i2w[len(self.i2w)] = word
 		self.vocab_size = len(self.i2w)
 		start_word_distribution = sorted(collections.Counter(start_words).items(), key=lambda x: x[1], reverse=True)
 		self.start_words = [_[0] for _ in start_word_distribution]
@@ -111,6 +111,9 @@ class UNK_Vocabulary(object):
 		self.token_num = 0
 		self.vocab_size_raw = 0
 		self.vocab_size = 0
+		self._len = max_len
+		self._min_seg = min_len
+		self._word_drop = word_drop
 		self.w2i = {}
 		self.i2w = {}
 		self.start_words = []
@@ -206,6 +209,11 @@ class Corpus(object):
 					sentence = ['_BOS'] + sentence + ['_EOS']
 					self.corpus.append(list(map(_transfer, sentence)))
 					self.labels.append(label)
+		for (w, c) in word_distribution:
+			if c <= self._word_drop:
+				self.unk_distribution[self.w2i[w]] = c
+		self.unk_distribution = self.unk_distribution/np.sum(self.unk_distribution)
+		start_word_distribution = sorted(collections.Counter(start_words).items(), key=lambda x: x[1], reverse=True)
 		self.corpus_length = [len(i) for i in self.corpus]
 		self.max_sentence_length = max(self.corpus_length)
 		self.min_sentence_length = min(self.corpus_length)
@@ -289,6 +297,9 @@ def get_corpus_distribution(data_path):
 	lengths_tmp = np.zeros(max(list(lengths.keys()))+1)
 	for k,v in lengths.items():
 		lengths_tmp[k] = v
+		new_sentences = new_sentences[:2000000]  # down sampling
+		train = new_sentences[:int(len(new_sentences) * ratio)]
+		test = new_sentences[int(len(new_sentences) * ratio):]
 	lengths_norm = lengths_tmp
 	lengths_norm = lengths_norm/np.sum(lengths_norm)
 	length_sum = 0

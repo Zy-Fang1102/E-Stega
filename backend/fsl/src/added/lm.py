@@ -4,17 +4,16 @@ from transformers import PreTrainedModel,GPT2PreTrainedModel
 
 
 class LM(GPT2PreTrainedModel):
-	def __init__(self, config, cell, my_vocab_size, embed_size, hidden_dim, num_layers, dropout_rate):
+	def __init__(self, config, cell, my_vocab_size, embed_size, hidden_dim, num_layers, dropout_rates):
 		super().__init__(config)
 		self._cell = cell
 		self.vocab_size = my_vocab_size
 		self.embedding = nn.Embedding(my_vocab_size, embed_size)
 		if cell == 'rnn':
-			self.rnn = nn.RNN(embed_size, hidden_dim, num_layers, dropout=dropout_rate)
-		elif cell == 'gru':
-			self.rnn = nn.GRU(embed_size, hidden_dim, num_layers, dropout=dropout_rate)
+			self.rnn = nn.RNN(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
+
 		elif cell == 'lstm':
-			self.rnn = nn.LSTM(embed_size, hidden_dim, num_layers, dropout=dropout_rate)
+			self.rnn = nn.LSTM(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
 		else:
 			raise Exception('no such rnn cell')
 
@@ -49,35 +48,37 @@ class LM(GPT2PreTrainedModel):
 
 
 class Old_LM(nn.Module):
-	def __init__(self, cell, vocab_size, embed_size, hidden_dim, num_layers, dropout_rate):
+	def __init__(self, cell, vocab_size, embed_size, hidden_dim, num_layers, dropout_rates):
 		super(Old_LM, self).__init__()
 		self._cell = cell
 
 		self.embedding = nn.Embedding(vocab_size, embed_size)
 		if cell == 'rnn':
-			self.rnn = nn.RNN(embed_size, hidden_dim, num_layers, dropout=dropout_rate)
+			self.rnn = nn.RNN(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
 		elif cell == 'gru':
-			self.rnn = nn.GRU(embed_size, hidden_dim, num_layers, dropout=dropout_rate)
-		elif cell == 'lstm':
-			self.rnn = nn.LSTM(embed_size, hidden_dim, num_layers, dropout=dropout_rate)
+			self.rnn = nn.GRU(embed_size, hidden_dim, num_layers, dropout=dropout_rates)
+
 		else:
 			raise Exception('no such rnn cell')
 
 		self.output_layer = nn.Linear(hidden_dim, vocab_size)
 		self.log_softmax = nn.LogSoftmax(dim=2)
 
-	def forward(self, x):
-		x = x.long()
-		_ = self.embedding(x)
-		_ = _.permute(1, 0, 2)
-		h_all, __ = self.rnn(_)
-		h_all = h_all.permute(1, 0, 2)
-		_ = self.output_layer(h_all)
-		_ = self.log_softmax(_)
-		return _
+	# def forward(self, x):
+	# 	x = x.long()
+	# 	_ = self.embedding(x)
+	# 	_ = _.permute(1, 0, 2)
+	# 	h_all, __ = self.rnn(_)
+	# 	h_all = h_all.permute(1, 0, 2)
+	# 	_ = self.output_layer(h_all)
+	# 	_ = self.log_softmax(_)
+	# 	return _
 
 	def sample(self, x, forbidden=[1]):
 		log_prob = self.forward(x)
+		prob = torch.exp(log_prob)[:, -1, :]
+		p, i = prob.sort(descending=True)
+
 		prob = torch.exp(log_prob)[:, -1, :]
 		p, i = prob.sort(descending=True)
 		self.p = p
@@ -98,6 +99,9 @@ class Old_LM(nn.Module):
 				prob[:, forbidden_ind] = 0
 		prob, ids = prob.sort(descending=True)
 		prob = prob/prob.sum()
+		log_prob = self.forward(x)
+		prob = torch.exp(log_prob)[:, -1, :]
+		p, i = prob.sort(descending=True)
 		cum_prob = prob.cumsum(1)
 		cum_prob_flags = cum_prob > topp
 		stop_id = cum_prob_flags.nonzero(as_tuple=True)[1][0]

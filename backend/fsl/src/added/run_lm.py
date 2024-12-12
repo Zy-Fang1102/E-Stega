@@ -70,6 +70,15 @@ def train_rnn(train_dataset, val_dataset, model, Training_Configs, vocabulary):
 					torch.save(model.state_dict(), 'models/' + Training_Configs.DATASET + '-best-checkpoint' + '.pkl')
 					logger.info('-----------------------------------------------------')
 
+				# 备用判别
+				# if eval_loss > best_loss:
+				# 	best_loss = eval_loss
+				# 	logger.info('-----------------------------------------------------')
+				# 	logger.info('saving parameters')
+				# 	os.makedirs('models', exist_ok=True)
+				# 	torch.save(model.state_dict(), 'models/' + Training_Configs.DATASET + '-best-checkpoint' + '.pkl')
+				# 	logger.info('-----------------------------------------------------')
+
 
 		if STEPS % Training_Configs.GENERATE_EVERY == 0:
 			model.eval()
@@ -86,6 +95,41 @@ def train_rnn(train_dataset, val_dataset, model, Training_Configs, vocabulary):
 								[vocabulary.w2i['_BOS'], vocabulary.w2i['_EOS'], vocabulary.w2i['_PAD']]]))
 			logger.info('-----------------------------------------------------')
 
+def generate_sequence(MAX_SEQUENCE_LENGTH, input_file, tokenizer, unlabeled=False, do_pairwise=False):
+
+    X1 = []
+    X2 = []
+    y = []
+    y_unlabeled=[]
+
+    label_count = defaultdict(int)
+    with tf.io.gfile.GFile(input_file, "r") as f:
+      reader=csv.DictReader(f)
+      for line in reader:
+
+      #reader = csv.reader(f, delimiter="\t", quotechar="|")
+      #for line in reader:
+       # print(line)
+        #print(line[0])
+        #print(line[0][1])
+        if len(line) == 0:
+          continue
+        X1.append(convert_to_unicode(line["sentence"]))
+        if do_pairwise:
+          X2.append(convert_to_unicode(line[1]))
+        if not unlabeled:
+            if do_pairwise:
+              label = int(convert_to_unicode(line[2]))
+            else:
+              label = int(convert_to_unicode(line["label"]))
+            y.append(label)
+            label_count[label] += 1
+        else:
+            #y.append(-1)
+            dataset = line["from"]
+            y.append(dataset)
+            label = int(convert_to_unicode(line["label"]))
+            y_unlabeled.append(label)
 
 def eval_rnn(eval_dataset, model, criteration, Training_Configs, vocabulary):
 	eval_loss = []

@@ -30,32 +30,6 @@ def num_same_from_beg(bits1, bits2):
             break
     return i
 
-def near(alist, anum):
-    up = len(alist) - 1
-    if up == 0:
-        return 0
-    bottom = 0
-    while up - bottom > 1:
-        index = int((up + bottom) / 2)
-        if alist[index] < anum:
-            up = index
-        elif alist[index] > anum:
-            bottom = index
-        else:
-            return index
-    if up - bottom == 1:
-        if alist[bottom] - anum < anum - up:
-            index = bottom
-        else:
-            index = up
-    return index
-
-def msb_bits2int(bits):
-    res = 0
-    for i, bit in enumerate(bits[::-1]):
-        res += bit * (2 ** i)
-    return res
-
 def msb_int2bits(inp, num_bits):
     if num_bits == 0:
         return []
@@ -201,6 +175,19 @@ def m_int2bits(inp, num_bits):
         return []
     strlist = ('{0:0%db}' % num_bits).format(inp)
     return [int(strval) for strval in strlist]
+
+def find_est(prob, delta,):
+    diff = (np.array(prob) - delta)
+    tmp_idx = np.argmin(diff**2)
+    if prob[tmp_idx] < delta:
+        return tmp_idx
+    elif tmp_idx >= len(prob)-2:
+        return tmp_idx
+    else:
+        new_idx = tmp_idx+1
+        idx = find_nearest(prob[new_idx+1:], delta-prob[new_idx])
+        idx += new_idx+1
+        return idx
 
 def findlist(prob, delta,):
     diff = (np.array(prob) - delta)

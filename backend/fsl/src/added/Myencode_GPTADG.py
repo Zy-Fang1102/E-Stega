@@ -128,6 +128,7 @@ def int2bits_low(inp, num_bits):
     strlist = ('{0:0%db}' % num_bits).format(inp)
     return [int(strval) for strval in reversed(strlist)]
 
+
 def main(Config, bit_stream_file):
     # Setup logging
     logging.basicConfig(
