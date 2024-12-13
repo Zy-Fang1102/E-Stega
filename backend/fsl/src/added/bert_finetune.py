@@ -145,6 +145,8 @@ labels = df.label.values # 语句
 # ### 7 模型训练
 # 支持多GPU训练
 model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
+total_params = sum(p.numel() for p in model.parameters())
+logging.info(f"Model loaded with {total_params:,} parameters.")
 if torch.cuda.device_count() > 1:
     model = torch.nn.DataParallel(model)  # 包装为 DataParallel 模型
 model.to(device)
