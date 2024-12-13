@@ -49,7 +49,8 @@ logging.info(f"Using device: {device}")
 # 读取数据
 df = pd.read_csv("train.tsv", delimiter='\t', header=None, names=['label', 'sentence'])
 df.head()
-df['label'].value_counts()
+label_counts = df['label'].value_counts()
+logging.info(f"Label distribution in training data:\n{label_counts}")
 
 
 # ### 2 构建BERT的输入语料格式
