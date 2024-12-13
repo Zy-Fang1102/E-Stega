@@ -188,7 +188,11 @@ for i in tqdm(range(EPOCHS), desc='Epoch'):
         # 梯度置零
         optimizer.zero_grad()
         # 前向传播
-        outputs = model(inputs_ids, token_type_ids=None, attention_mask=inputs_masks, labels=inputs_labels)
+        try:
+            outputs = model(inputs_ids, token_type_ids=None, attention_mask=inputs_masks, labels=inputs_labels)
+        except RuntimeError as e:
+            logging.error(f"Runtime error during forward pass: {e}")
+            continue
         #print("keys : ", outputs.keys())  # ['loss', 'logits']
         # 获取loss
         loss = outputs['loss']
