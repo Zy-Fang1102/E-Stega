@@ -249,7 +249,10 @@ for i in tqdm(range(EPOCHS), desc='Epoch'):
             plt.title("Confusion Matrix")
             plt.xlabel("Predicted Labels")
             plt.ylabel("True Labels")
-            plt.show()
+            output_path = f"confusion_matrix_epoch_{i + 1}.png"
+            plt.savefig(output_path)
+            logging.info(f"Confusion matrix saved to {output_path}")
+            plt.close()
         
         eval_steps += 1
     
