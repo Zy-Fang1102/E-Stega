@@ -275,7 +275,8 @@ labels = torch.tensor(labels)
 # 数据打包
 # Create a new labels tensor with the same number of samples as sentence_ids and attention_mask
 test_dataset = TensorDataset(sentence_ids, attention_mask, labels)
-test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)  # 修正 shuffle 为 False
+test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+logging.info("Test data will not be shuffled.")
 
 # 模型测试
 model.eval()
