@@ -208,6 +208,8 @@ for i in tqdm(range(EPOCHS), desc='Epoch'):
         optimizer.step()
         # 更新学习率
         scheduler.step()
+        current_lr = scheduler.get_last_lr()[0]
+        logging.info(f"Epoch {i + 1}: Learning rate updated to {current_lr:.6e}")
         
     
     train_loss_avg = tr_loss / tr_steps
