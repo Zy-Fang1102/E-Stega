@@ -30,7 +30,10 @@ warnings.filterwarnings("ignore")
 
 
 # # 检查本机GPU是否可用
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+if torch.cuda.is_available():
+    logging.info(f"GPU is available. Using device: {torch.cuda.get_device_name(0)}")
+else:
+    logging.info("GPU is not available. Using CPU.")
 # # gpu的数量
 # gpu_num = torch.cuda.device_count()
 # # GPU型号
