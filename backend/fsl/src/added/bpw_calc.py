@@ -44,11 +44,13 @@ def bpw(filename):
                     break
 
         # 计算并输出比特与标记的比例
-        if tokens:  # 避免除以零
-            ratio = len(bits) / len(tokens)
-            print(f"{filename} : {ratio}")
-        else:
-            print(f"{filename} : No tokens found (division by zero).")
+        if not tokens:
+            logging.warning(f"No tokens found in {filename}. Division by zero avoided.")
+            return
+
+        ratio = len(bits) / len(tokens)
+        logging.info(f"File: {filename} - Ratio of bits to tokens: {ratio:.4f}")
+        print(f"{filename} : {ratio:.4f}")
 
 def obj(obj):
     if not isinstance(obj, dict):
