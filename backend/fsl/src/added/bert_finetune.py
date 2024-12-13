@@ -50,7 +50,14 @@ logging.info(f"Using device: {device}")
 
 # ### 1 加载数据集
 # 读取数据
-df = pd.read_csv("train.tsv", delimiter='\t', header=None, names=['label', 'sentence'])
+try:
+    df = pd.read_csv("train.tsv", delimiter='\t', header=None, names=['label', 'sentence'])
+except FileNotFoundError:
+    logging.error("File 'train.tsv' not found. Please check the file path.")
+    raise
+except pd.errors.EmptyDataError:
+    logging.error("File 'train.tsv' is empty. Please provide a valid dataset.")
+    raise
 df.head()
 label_counts = df['label'].value_counts()
 logging.info(f"Label distribution in training data:\n{label_counts}")
