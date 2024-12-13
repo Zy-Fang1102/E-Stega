@@ -98,4 +98,6 @@ if __name__ == '__main__':
     # bpw_jsonlines("generation/encoding/1124-tweet-ac-oov/stegos-encoding.jsonl")
     # bpw_jsonlines("generation/encoding/1124-tweet-ac/stegos-encoding.jsonl")
     # obj(  )
+    logging.info("Starting bpw_jsonlines processing for file: generation/encoding/1124-movie-hc/stegos-encoding.jsonl")
     bpw_jsonlines("generation/encoding/1124-movie-hc/stegos-encoding.jsonl")
+    logging.info("Finished processing.")
