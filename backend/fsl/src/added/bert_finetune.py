@@ -86,7 +86,7 @@ print(sentence_ids[0])
 sentence_ids = pad_sequences(sentence_ids, maxlen=max_len, dtype='int32', truncating='post', padding='post')
 print(sentence_ids[0])
 # 5 根据 sentence_ids 创建 attention mask
-attention_mask = [[1 if id > 0 else 0 for id in sen] for sen in sentence_ids]
+attention_mask = np.where(sentence_ids > 0, 1, 0).tolist()
 print(attention_mask[0])
 
 
