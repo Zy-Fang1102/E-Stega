@@ -58,6 +58,24 @@ def obj(obj):
         return obj
     return MyDict(obj)
 
+def run_bpw():
+    bpw(filename="stego-grouping/reddit-0124-select-10000-with-isolated/grouping")
+
+    for bit in range(1, 16):
+        bpw(filename=f"../generation/stego-ac/reddit-0124-select-10000-with-isolated/topk-{bit}bit")
+
+    for bit in range(1, 6):
+        bpw(filename=f"../generation/stego-hc/reddit-0124-select-10000-with-isolated/huffman-topk-{bit}bit")
+
+    for bit in range(1, 9):
+        bpw(filename=f"stego-hc/graph/huffman-topk-{bit}bit")
+
+def run_bpw_jsonlines():
+    bpw_jsonlines("generation/encoding/1124-news-ac-oov/stegos-encoding.jsonl")
+    bpw_jsonlines("generation/encoding/1124-news-ac/stegos-encoding.jsonl")
+    bpw_jsonlines("generation/encoding/1124-movie-ac-oov/stegos-encoding.jsonl")
+    bpw_jsonlines("generation/encoding/1124-movie-ac/stegos-encoding.jsonl")
+
 
 if __name__ == '__main__':
     # # 单独调用 bpw 函数
