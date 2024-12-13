@@ -73,7 +73,7 @@ max_len = 128
 sentence_ids = [tokenizer.convert_tokens_to_ids(sen) for sen in sentence_tokens]
 print(sentence_ids[0])
 # 4 将所有语句的长度固定到 max_len
-sentence_ids = pad_sequences(sentence_ids, maxlen=max_len, dtype='long', truncating='post', padding='post')
+sentence_ids = pad_sequences(sentence_ids, maxlen=max_len, dtype='int32', truncating='post', padding='post')
 print(sentence_ids[0])
 # 5 根据 sentence_ids 创建 attention mask
 attention_mask = [[1 if id > 0 else 0 for id in sen] for sen in sentence_ids]
