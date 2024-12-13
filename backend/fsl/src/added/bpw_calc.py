@@ -40,6 +40,7 @@ def bpw(filename):
 
                 # 如果设置了最大数量并达到了限制，则停止
                 if max_num is not None and counter >= max_num:
+                    logging.info(f"Reached maximum number of entries ({max_num}). Stopping.")
                     break
 
         # 计算并输出比特与标记的比例
