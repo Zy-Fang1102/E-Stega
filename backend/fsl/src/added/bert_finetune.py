@@ -331,4 +331,6 @@ for batch in test_dataloader:
     
 print("steps = ", steps)
 print("test number = ", num)
-print("test acc : {}".format(test_acc / steps))
+final_test_acc = test_acc / steps
+logging.info(f"Final Test Accuracy: {final_test_acc:.4f} over {num} samples.")
+print("Final Test Accuracy: {:.4f}".format(final_test_acc))
