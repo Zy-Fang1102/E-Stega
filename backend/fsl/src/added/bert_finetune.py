@@ -264,8 +264,9 @@ for i in tqdm(range(EPOCHS), desc='Epoch'):
 df = pd.read_csv("test.tsv", delimiter='\t', header=None, names=['label', 'sentence'])
 df.head()
 
-sentences = df.sentence.values # 语句
-labels = df.label.values # 语句
+logging.info(f"Total sentences loaded: {len(df)}")
+sentences = df.sentence.values
+labels = df.label.values
 
 # 构造输入格式
 sentences = ["[CLS] " + sen + " [SEP]" for sen in sentences]
