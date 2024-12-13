@@ -24,8 +24,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def bits2int(bits):
     res = 0
-    for i, bit in enumerate(bits):
-        res += bit * (2 ** i)
+    # for i, bit in enumerate(bits):
+    #     res += bit * (2 ** i)
     return res
 
 

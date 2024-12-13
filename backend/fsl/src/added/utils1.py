@@ -213,6 +213,10 @@ class HuffmanCoding:
         self.codes = {}
         self.reverse_mapping = {}
 
+        self.vocab_size = len(self.word_table)
+
+        self.UNKNOWN_CHAR = self.stoi[UNKNOWN_CHAR]
+
     class HeapNode:
         def __init__(self, char, freq):
             self.char = char
@@ -236,14 +240,12 @@ class HuffmanCoding:
     def make_frequency_dict(self, text):
         frequency = {}
         for character in text:
-            if not character in frequency:
-                frequency[character] = 0
-            frequency[character] += 1
+            frequency[character] = frequency.get(character, 0) + 1
         return frequency
 
     def make_heap(self, frequency):
-        for key in frequency:
-            node = self.HeapNode(key, frequency[key])
+        for key, freq in frequency.items():
+            node = self.HeapNode(key, freq)
             heapq.heappush(self.heap, node)
 
     def merge_nodes(self):
@@ -258,27 +260,25 @@ class HuffmanCoding:
             heapq.heappush(self.heap, merged)
 
     def make_codes_helper(self, root, current_code):
-        if (root == None):
+        if root is None:
             return
 
-        if (root.char != None):
+        # 如果当前节点是叶子节点，存储字符对应的编码
+        if root.char is not None:
             self.codes[root.char] = current_code
             self.reverse_mapping[current_code] = root.char
             return
 
+        # 递归处理左子树和右子树
         self.make_codes_helper(root.left, current_code + "0")
         self.make_codes_helper(root.right, current_code + "1")
 
     def make_codes(self):
         root = heapq.heappop(self.heap)
-        current_code = ""
-        self.make_codes_helper(root, current_code)
+        self.make_codes_helper(root, "")
 
     def get_encoded_text(self, text):
-        encoded_text = ""
-        for character in text:
-            encoded_text += self.codes[character]
-        return encoded_text
+        return ''.join(self.codes[character] for character in text)
 
     def pad_encoded_text(self, encoded_text):
         extra_padding = 8 - len(encoded_text) % 8

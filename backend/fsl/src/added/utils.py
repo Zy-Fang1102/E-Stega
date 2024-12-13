@@ -22,12 +22,14 @@ class RemovedConfig(object):
 
 
 	def dictobj2obj(self, dictobj):
-		if not isinstance(dictobj, dict):
-			return dictobj
-		d = MyDict()
-		for k,v in dictobj.items():
-			d[k] = self.dictobj2obj(v)
-		return d
+		if isinstance(dictobj, dict):
+			d = MyDict()
+			for k, v in dictobj.items():
+				d[k] = self.dictobj2obj(v)
+			return d
+		elif isinstance(dictobj, list):
+			return [self.dictobj2obj(item) for item in dictobj]
+		return dictobj
 
 	def get_configs(self):
 		return self.configs
@@ -39,12 +41,14 @@ class Config(object):
 		self.configs = self.dictobj2obj(configs)
 
 	def dictobj2obj(self, dictobj):
-		if not isinstance(dictobj, dict):
-			return dictobj
-		d = MyDict()
-		for k,v in dictobj.items():
-			d[k] = self.dictobj2obj(v)
-		return d
+		if isinstance(dictobj, dict):
+			d = MyDict()
+			for k, v in dictobj.items():
+				d[k] = self.dictobj2obj(v)
+			return d
+		elif isinstance(dictobj, list):
+			return [self.dictobj2obj(item) for item in dictobj]
+		return dictobj
 
 	def get_configs(self):
 		return self.configs

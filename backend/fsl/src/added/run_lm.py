@@ -228,29 +228,90 @@ def train_lm(dataset, model, Training_Configs, tokenizer):
 	unwrapped_model.save_pretrained(os.path.join(Training_Configs.output_dir, "final"))
 	tokenizer.save_pretrained(os.path.join(Training_Configs.output_dir, "final"))
 
-
-def eval_lm(dataset, model, Training_Configs, tokenizer):
-	eval_dataset = dataset["validation"]
-	eval_dataloader = DataLoader(
-		eval_dataset, collate_fn=default_data_collator, batch_size=Training_Configs.BATCH_SIZE
-	)
+def eval_lstm(eval_dataset, model, criteration, Training_Configs, vocabulary):
+	eval_loss = []
 	model.eval()
-	losses = []
-	for step, batch in enumerate(eval_dataloader):
-		with torch.no_grad():
-			batch = {k: batch[k].to(device) for k in batch}
-			outputs = model(**batch)
+	generator = utils.Generator(eval_dataset.corpus)
+	eval_g = generator.build_generator(Training_Configs.BATCH_SIZE, Training_Configs.SEQUENCE_LEN)
+	with torch.no_grad():
+		while True:
+			try:
+				text = eval_g.__next__()
+			except:
+				break
+			text_in = text[:, :-1]
+			text_target = text[:, 1:]
+			y = model(torch.from_numpy(text_in).long().to(device))
+			loss = criteration(y.reshape(-1, vocabulary.vocab_size),
+							   torch.from_numpy(text_target).reshape(-1).long().to(device))
+			eval_loss.append(loss.item())
+	return np.mean(eval_loss)
 
-		loss = outputs.loss
-		losses.append(loss.repeat(Training_Configs.BATCH_SIZE))
+import torch
+import math
+from torch.utils.data import DataLoader
+from transformers import default_data_collator
 
-	losses = torch.cat(losses)
-	losses = losses[: len(eval_dataset)]
-	try:
-		perplexity = math.exp(torch.mean(losses))
-	except OverflowError:
-		perplexity = float("inf")
-	return perplexity
+import torch
+from torch.utils.data import DataLoader
+from transformers import default_data_collator
+import math
+
+def eval_lm(dataset, model, training_configs, tokenizer, device='cuda'):
+    """
+    Evaluate the language model on a validation dataset and compute perplexity.
+
+    Args:
+        dataset (dict): A dataset dictionary containing a "validation" split.
+        model (torch.nn.Module): The language model to evaluate.
+        training_configs (object): Configuration object containing hyperparameters like batch size.
+        tokenizer (PreTrainedTokenizer): Tokenizer used for processing the dataset.
+        device (str): The device to run the evaluation on, defaults to 'cuda'.
+
+    Returns:
+        float: The computed perplexity score for the model on the validation set.
+    """
+    # Load the validation split from the dataset
+    eval_dataset = dataset["validation"]
+
+    # Create a DataLoader for the evaluation dataset
+    eval_dataloader = DataLoader(
+        eval_dataset, 
+        collate_fn=default_data_collator, 
+        batch_size=training_configs.BATCH_SIZE
+    )
+
+    # Set the model to evaluation mode
+    model.eval()
+
+    # Initialize a list to store losses
+    losses = []
+
+    # Iterate over the DataLoader
+    for step, batch in enumerate(eval_dataloader):
+        with torch.no_grad():  # Disable gradient computation
+            # Move the batch data to the specified device
+            batch = {k: v.to(device) for k, v in batch.items()}
+            
+            # Perform a forward pass through the model
+            outputs = model(**batch)
+
+            # Extract the loss from the model's outputs
+            loss = outputs.loss
+
+            # Append the loss (repeated by the batch size) to the list
+            losses.append(loss.repeat(training_configs.BATCH_SIZE))
+
+    # Concatenate all losses and truncate to the dataset size
+    losses = torch.cat(losses)[:len(eval_dataset)]
+
+    # Compute perplexity
+    try:
+        perplexity = math.exp(losses.mean().item())
+    except OverflowError:
+        perplexity = float("inf")  # Handle numerical overflow gracefully
+
+    return perplexity
 
 
 
@@ -327,10 +388,10 @@ def main(config):
 	elif MODEL_TYPE in ["GPT","T5","BART"]:
 		if MODEL_TYPE == "GPT":
 			LM_configs = config.GPT
-			model_config = GPT2Config.from_pretrained(LM_configs.model_name_or_path)
-			tokenizer = GPT2TokenizerFast.from_pretrained(LM_configs.model_name_or_path)
-			# load model
-			model = GPT2LMHeadModel.from_pretrained(LM_configs.model_name_or_path, config=model_config)
+			model_name_or_path = LM_configs.model_name_or_path
+			model_config = GPT2Config.from_pretrained(model_name_or_path)
+			tokenizer = GPT2TokenizerFast.from_pretrained(model_name_or_path)
+			model = GPT2LMHeadModel.from_pretrained(model_name_or_path, config=model_config)
 			model.to(device)
 		elif MODEL_TYPE=="T5":
 			LM_configs = config.T5
@@ -357,19 +418,38 @@ def main(config):
 		column_names = raw_datasets["train"].column_names
 		text_column_name = "text" if "text" in column_names else column_names[0]
 
-	# TODO: 这里存在一个问题
+		# TODO: 这里存在一个问题
 		def gpt_tokenize_function(examples):
-			return tokenizer(tokenizer.bos_token+Training_Configs.prompt+examples[text_column_name])
+			return tokenizer(tokenizer.bos_token + Training_Configs.prompt + examples[text_column_name])
 
 		def bart_tokenize_function(examples):
-			return tokenizer(examples[text_column_name])
+			return tokenizer(examples[text_column_name], truncation=True, padding="longest")
 
 		def t5_tokenize_function(examples):
-			# prefix = "steganography generate: "
-			# return tokenizer.prepare_seq2seq_batch(src_texts=examples[text_column_name],tgt_texts=[prefix +text for text in examples[text_column_name]])
-			return tokenizer(examples[text_column_name])
-			# return tokenizer([prefix +text for text in examples[text_column_name]])
+			prefix = "steganography generate: "  # 可根据需要调整前缀
+			return tokenizer([prefix + text for text in examples[text_column_name]], truncation=True, padding="longest")
 
+		if MODEL_TYPE == "GPT":
+			tokenize_function = gpt_tokenize_function
+		elif MODEL_TYPE == "T5":
+			tokenize_function = t5_tokenize_function
+		elif MODEL_TYPE == "BART":
+			tokenize_function = bart_tokenize_function
+		``````python
+		if MODEL_TYPE == "GPT":
+			tokenize_function = gpt_tokenize_function
+		elif MODEL_TYPE == "T5":
+			tokenize_function = t5_tokenize_function
+		elif MODEL_TYPE == "BART":
+			tokenize_function = bart_tokenize_function
+		``````python
+		if MODEL_TYPE == "GPT":
+			tokenize_function = gpt_tokenize_function
+		elif MODEL_TYPE == "T5":
+			tokenize_function = t5_tokenize_function
+		elif MODEL_TYPE == "BART":
+			tokenize_function = bart_tokenize_function
+		``````python
 		if MODEL_TYPE == "GPT":
 			tokenize_function = gpt_tokenize_function
 		elif MODEL_TYPE == "T5":

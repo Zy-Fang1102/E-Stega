@@ -10,18 +10,36 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 logger = logging.getLogger(__name__)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# e.g. [0, 1, 1, 1] looks like 1110=14
 def bits2int(bits):
-    res = 0
-    for i, bit in enumerate(bits):
-        res += bit * (2 ** i)
-    return res
+    """
+    将二进制位列表转换为整数。
+    位列表中的低位在前，高位在后。
+    
+    Args:
+        bits (list[int]): 二进制位列表，例如 [0, 1, 1, 1] 表示二进制 1110。
+
+    Returns:
+        int: 转换后的整数。
+    """
+    return sum(bit * (2 ** i) for i, bit in enumerate(bits))
 
 def int2bits(inp, num_bits):
-    if num_bits == 0:
+    """
+    将整数转换为指定位数的二进制位字符串（低位在前）。
+
+    Args:
+        inp (int): 输入的整数。
+        num_bits (int): 需要的二进制位数。
+
+    Returns:
+        str: 低位在前的二进制字符串表示。
+    """
+    if num_bits <= 0:
         return ""
-    strlist = ('{0:0%db}' % num_bits).format(inp)
-    return strlist[::-1]  # 返回字符串形式的比特流，反转顺序以保持正确顺序
+    # 格式化为指定位数的二进制字符串
+    binary_str = f"{inp:0{num_bits}b}"
+    # 返回低位在前的字符串
+    return binary_str[::-1]
 
 def num_same_from_beg(bits1, bits2):
     assert len(bits1) == len(bits2)
@@ -41,25 +59,36 @@ def find_nearest_list(prob, delta,):
     tmp_idx = np.argmin(diff**2)
     if prob[tmp_idx] < delta:
         return_list = [tmp_idx]
-        if tmp_idx == len(prob) -1:
-            pass
+        
+        # 如果已经是最后一个元素，直接返回当前索引
+        if tmp_idx == len(prob) - 1:
+            return return_list
         else:
+            # 向后累加索引，直到累加概率超过 delta 或到达末尾
             tmp_sum = prob[tmp_idx]
-            for i in range(tmp_idx+1, len(prob)-1):
-                if delta>(tmp_sum + prob[i]):
+            for i in range(tmp_idx + 1, len(prob) - 1):
+                if delta > (tmp_sum + prob[i]):
                     tmp_sum += prob[i]
                     return_list.append(i)
-        return return_list
-    elif tmp_idx >= len(prob)-2:
+            return return_list
+
+    # 如果当前索引已经接近列表末尾，直接返回当前索引
+    elif tmp_idx >= len(prob) - 2:
         return [tmp_idx]
+
     else:
+        # 向后递归查找，寻找更合适的索引列表
         new_idx = tmp_idx + 1
         idx = [new_idx]
-        idx += find_nearest_list(prob[new_idx+1:], delta-prob[new_idx])
+        # 递归查找后续部分
+        idx += find_nearest_list(prob[new_idx + 1:], delta - prob[new_idx], 0, diff)
+
+        # 调整递归返回的索引以匹配原始列表
         for i in range(1, len(idx)):
-            idx[i] += new_idx+1
-        # return idx
-        if (delta-np.sum(np.array(prob)[idx]))**2 > diff[tmp_idx]**2:
+            idx[i] += new_idx + 1
+
+        # 检查递归结果是否比当前结果更优
+        if (delta - np.sum(np.array(prob)[idx]))**2 > diff[tmp_idx]**2:
             return [tmp_idx]
         else:
             return idx
