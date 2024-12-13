@@ -223,6 +223,9 @@ for i in tqdm(range(EPOCHS), desc='Epoch'):
     eval_steps, eval_examples = 0.0, 0.0
     
     for batch in eval_dataloader:
+        if len(batch) == 0:
+            logging.warning("Empty batch encountered in evaluation dataloader.")
+            continue
         # 部署到GPU
         batch = tuple(data.to(device) for data in batch)  # 修正为 batch
         # 解析
