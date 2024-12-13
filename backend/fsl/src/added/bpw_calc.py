@@ -31,7 +31,10 @@ def bpw(filename):
             bits = []
             tokens = []
             for counter, text in enumerate(jsonlines.Reader(f), start=1):
-                # 追加处理后的 bits 和 tokens
+                if not all(key in text for key in ["bits", "tokens"]):
+                    logging.warning(f"Skipping invalid entry at line {counter}: {text}")
+                    continue
+
                 bits.extend(text["bits"][2:-1])
                 tokens.extend(text["tokens"][2:-1])
 
