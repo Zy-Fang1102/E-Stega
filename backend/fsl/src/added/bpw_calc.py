@@ -1,14 +1,18 @@
 import jsonlines
+import os
 
 def bpw(filename):
     bit_file = f"{filename}.bit"
     text_file = f"{filename}.txt"
 
-    # 读取 .bit 文件内容并拼接为一个字符串
+    if not os.path.exists(bit_file):
+        raise FileNotFoundError(f"File not found: {bit_file}")
+    if not os.path.exists(text_file):
+        raise FileNotFoundError(f"File not found: {text_file}")
+
     with open(bit_file, "r", encoding="utf-8") as f:
         bits = "".join(f.read().splitlines())
 
-    # 读取 .txt 文件内容并提取所有单词（从每行的第二个元素开始）
     with open(text_file, "r", encoding="utf-8") as f:
         words = [word for line in f for word in line.split()[1:]]
 
