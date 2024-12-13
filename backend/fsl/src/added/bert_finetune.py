@@ -142,7 +142,8 @@ params = list(model.named_parameters())
 EPOCHS = 10
 # 优化器
 optimizer = AdamW(model.parameters(), lr=2e-5, eps=1e-8)
-warmup_steps = int(0.1 * len(train_dataloader) * EPOCHS)  # 设置 warmup 步骤为总训练步骤的 10%
+warmup_steps = max(1, int(0.1 * len(train_dataloader) * EPOCHS))
+logging.info(f"Warmup steps set to: {warmup_steps}")
 scheduler = get_linear_schedule_with_warmup(optimizer, 
                                             num_warmup_steps=warmup_steps, 
                                             num_training_steps=len(train_dataloader) * EPOCHS)
