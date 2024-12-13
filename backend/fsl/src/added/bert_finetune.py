@@ -126,7 +126,8 @@ train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True
 # 数据打包
 eval_dataset = TensorDataset(X_eval, eval_masks, y_eval)
 # 一批一批地读取
-eval_dataloader = DataLoader(eval_dataset, batch_size=batch_size, shuffle=True)
+eval_dataloader = DataLoader(eval_dataset, batch_size=batch_size, shuffle=False)
+logging.info("Evaluation data will not be shuffled.")
 sentences = df.sentence.values # 语句
 labels = df.label.values # 语句
 
