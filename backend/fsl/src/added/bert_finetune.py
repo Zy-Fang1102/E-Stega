@@ -98,7 +98,9 @@ print(temp_ids['attention_mask'][0])
 
 
 # ### 4 数据集进行分离：train 和 eval
-X_train, X_eval, y_train, y_eval = train_test_split(sentence_ids, labels, test_size=0.2, random_state=666)
+RANDOM_SEED = 42
+X_train, X_eval, y_train, y_eval = train_test_split(sentence_ids, labels, test_size=0.2, random_state=RANDOM_SEED)
+logging.info(f"Data split with random seed: {RANDOM_SEED}")
 train_masks, eval_masks, _, _ = train_test_split(attention_mask, sentence_ids, test_size=0.2, random_state=666)
 type(X_train)
 type(train_masks)
