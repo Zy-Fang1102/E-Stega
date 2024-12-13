@@ -210,7 +210,9 @@ for i in tqdm(range(EPOCHS), desc='Epoch'):
         scheduler.step()
         
     
-    logging.info(f"Epoch {i + 1}/{EPOCHS} - Training Loss: {tr_loss / tr_steps}")
+    train_loss_avg = tr_loss / tr_steps
+    logging.info(f"Epoch {i + 1}/{EPOCHS} - Training Loss: {train_loss_avg:.4f}, Training Samples: {tr_examples}")
+    logging.info(f"Epoch {i + 1}/{EPOCHS} - Validation Accuracy: {eval_acc / eval_steps:.4f}")
     
     
     # 模型验证
