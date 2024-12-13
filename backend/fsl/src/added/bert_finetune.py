@@ -37,8 +37,12 @@ warnings.filterwarnings("ignore")
 # torch.cuda.get_device_name()
 
 # 选择第三块GPU
-torch.cuda.set_device(3)
-device = 'cuda:3'
+if torch.cuda.is_available():
+    torch.cuda.set_device(0)  # 自动选择第一个可用GPU
+    device = torch.device('cuda:0')
+else:
+    device = torch.device('cpu')
+logging.info(f"Using device: {device}")
 
 
 # ### 1 加载数据集
