@@ -16,12 +16,12 @@ def bpw(filename):
     with open(text_file, "r", encoding="utf-8") as f:
         words = [word for line in f for word in line.split()[1:]]
 
-    # 计算并输出比特与单词的比例
-    if words:  # 避免除以零
-        ratio = len(bits) / len(words)
-        print(f"{filename} : {ratio}")
-    else:
-        print(f"{filename} : No words found (division by zero).")
+    if not words:
+        logging.warning(f"No words found in {text_file}. Skipping ratio calculation.")
+        return
+
+    ratio = len(bits) / len(words)
+    print(f"{filename} : {ratio}")
 
 
     def bpw_jsonlines(filename, max_num=None):
