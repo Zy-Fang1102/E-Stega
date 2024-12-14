@@ -2,15 +2,26 @@ import argparse
 import logging
 import os
 
+import time
 import jsonlines
 import numpy as np
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
+log_file_path = "generation/decoding/logs/decoding.log"
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.INFO,
+    handlers=[
+        logging.FileHandler(log_file_path),
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger(__name__)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-def bits2int(bits):
+def bits_to_int(bits):
     """
     将二进制位列表转换为整数。
     位列表中的低位在前，高位在后。
@@ -23,7 +34,7 @@ def bits2int(bits):
     """
     return sum(bit * (2 ** i) for i, bit in enumerate(bits))
 
-def int2bits(inp, num_bits):
+def int_to_bits(inp, num_bits):
     """
     将整数转换为指定位数的二进制位字符串（低位在前）。
 
@@ -36,9 +47,7 @@ def int2bits(inp, num_bits):
     """
     if num_bits <= 0:
         return ""
-    # 格式化为指定位数的二进制字符串
     binary_str = f"{inp:0{num_bits}b}"
-    # 返回低位在前的字符串
     return binary_str[::-1]
 
 def num_same_from_beg(bits1, bits2):
@@ -54,44 +63,20 @@ def msb_int2bits(inp, num_bits):
     strlist = ('{0:0%db}' % num_bits).format(inp)
     return [int(strval) for strval in strlist]
 
-def find_nearest_list(prob, delta,):
-    diff = (np.array(prob) - delta)
-    tmp_idx = np.argmin(diff**2)
-    if prob[tmp_idx] < delta:
-        return_list = [tmp_idx]
-        
-        # 如果已经是最后一个元素，直接返回当前索引
-        if tmp_idx == len(prob) - 1:
-            return return_list
-        else:
-            # 向后累加索引，直到累加概率超过 delta 或到达末尾
-            tmp_sum = prob[tmp_idx]
-            for i in range(tmp_idx + 1, len(prob) - 1):
-                if delta > (tmp_sum + prob[i]):
-                    tmp_sum += prob[i]
-                    return_list.append(i)
-            return return_list
+def find_nearest_list(prob, delta):
+    diff = np.abs(np.array(prob) - delta)  # 直接计算绝对值差
+    tmp_idx = np.argmin(diff)  # 找到最小差值索引
+    return_list = [tmp_idx]
 
-    # 如果当前索引已经接近列表末尾，直接返回当前索引
-    elif tmp_idx >= len(prob) - 2:
-        return [tmp_idx]
-
-    else:
-        # 向后递归查找，寻找更合适的索引列表
-        new_idx = tmp_idx + 1
-        idx = [new_idx]
-        # 递归查找后续部分
-        idx += find_nearest_list(prob[new_idx + 1:], delta - prob[new_idx], 0, diff)
-
-        # 调整递归返回的索引以匹配原始列表
-        for i in range(1, len(idx)):
-            idx[i] += new_idx + 1
-
-        # 检查递归结果是否比当前结果更优
-        if (delta - np.sum(np.array(prob)[idx]))**2 > diff[tmp_idx]**2:
-            return [tmp_idx]
-        else:
-            return idx
+    if tmp_idx < len(prob) - 1:
+        tmp_sum = prob[tmp_idx]
+        for i in range(tmp_idx + 1, len(prob)):
+            if tmp_sum + prob[i] <= delta:
+                tmp_sum += prob[i]
+                return_list.append(i)
+            else:
+                break
+    return return_list
 
 def find_nearest(prob, delta,):
     diff = (np.array(prob) - delta)
@@ -126,13 +111,13 @@ def decode_stego_text(stego_text):
 
     # Generate the decoded bit_stream
     with torch.no_grad():
-        # 增加max_length
+        # 添加 pad_token_id 参数，确保生成的序列中不会因缺省而出错
         output = model.generate(
             input_ids=stego_tokens["input_ids"],
             attention_mask=stego_tokens["attention_mask"],
-            max_length=stego_tokens["attention_mask"].shape[1] + 100,  # 增加max_new_tokens
+            max_length=stego_tokens["attention_mask"].shape[1] + 100,
             do_sample=False,
-            pad_token_id=tokenizer.eos_token_id,  # 设置pad_token_id为eos_token_id
+            pad_token_id=tokenizer.eos_token_id,  # 设置 pad_token_id 为 eos_token_id
         )
         decoded_tokens = output[:, stego_tokens["attention_mask"].shape[1]:]
 
@@ -156,17 +141,11 @@ def ADG_decoder(prob, prev, **kwargs):
         while (1 / 2 ** (bit + 1)) > prob[0]:
             bit += 1
         mean = 1 / 2 ** bit
-        # dp
-        prob = prob.tolist()
-        indices = indices.tolist()
-        result = []
-        for i in range(2 ** bit):
-            result.append([[], []])
+
+        # 替换 del 操作为 pop，提高性能
         for i in range(2 ** bit - 1):
-            result[i][0].append(prob[0])
-            result[i][1].append(indices[0])
-            del (prob[0])
-            del (indices[0])
+            result[i][0].append(prob.pop(0))
+            result[i][1].append(indices.pop(0))
             while sum(result[i][0]) < mean:
                 delta = mean - sum(result[i][0])
                 index = near(prob, delta)
@@ -255,11 +234,19 @@ def main(stego_text_file):
             #print(stego_text)
             decoded_bit_stream = decode_stego_text(stego_text)
             with jsonlines.open(os.path.join("generation/decoding/GPT2", "MyGPTADGstegos-decoding-test.jsonl"), "a") as writer:
-                writer.write({"decoded_bit_stream": decoded_bit_stream})
+                writer.write({
+                    "decoded_bit_stream": decoded_bit_stream,
+                    "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")
+                })
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="argument for decoding")
-    parser.add_argument("--stego_text_file", type=str, default="generation/encoding/GPT2/MyGPTADG-stegos-encoding-test.jsonl")
+    parser.add_argument(
+        "--stego_text_file",
+        type=str,
+        default="generation/encoding/GPT2/MyGPTADG-stegos-encoding-test.jsonl",
+        help="待解码的stego文本文件路径，默认值为 'generation/encoding/GPT2/MyGPTADG-stegos-encoding-test.jsonl'"
+    )
     args = parser.parse_args()
 
     main(args.stego_text_file)

@@ -6,7 +6,8 @@ import json
 import os
 import jsonlines
 import logging
-import Huffman_Encoding
+from tqdm import tqdm
+# import Huffman_Encoding
 
 from transformers import (
     GPT2LMHeadModel,
@@ -17,16 +18,20 @@ from transformers import (
     BartTokenizer
 )
 
+import time
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 logger = logging.getLogger(__name__)
+if torch.cuda.device_count() > 1:
+    model = torch.nn.DataParallel(model)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-def bits2int(bits):
-    res = 0
-    # for i, bit in enumerate(bits):
-    #     res += bit * (2 ** i)
-    return res
+# def bits2int(bits):
+#     res = 0
+#     # for i, bit in enumerate(bits):
+#     #     res += bit * (2 ** i)
+#     return res
 
 
 def int2bits(inp, num_bits):
@@ -149,7 +154,12 @@ def main(Config, bit_stream_file):
         if Training_Configs.model_type == "GPT":
             LM_Configs = Config.GPT
             tokenizer = GPT2Tokenizer.from_pretrained(LM_Configs.model_name_or_path)
-            model = GPT2LMHeadModel.from_pretrained(LM_Configs.model_name_or_path)
+            # 模型加载异常捕获
+            try:
+                model = GPT2LMHeadModel.from_pretrained(Training_Configs['model_name_or_path'])
+            except Exception as e:
+                logger.error(f"模型加载失败，请检查路径: {Training_Configs['model_name_or_path']}")
+                exit(1)
             model.to(device)
 
 
@@ -158,6 +168,21 @@ def main(Config, bit_stream_file):
         total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
         logger.info("Trainable params: {:d}".format(total_trainable_params))
 
+        log_file_path = os.path.join(Training_Configs['output_dir'], "generation.log")
+        logging.basicConfig(
+            format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
+            datefmt="%m/%d/%Y %H:%M:%S",
+            level=logging.INFO,
+            handlers=[
+                logging.FileHandler(log_file_path),
+                logging.StreamHandler()
+            ]
+        )
+
+        logger.info("开始加载模型...")
+        logger.info(f"模型加载路径: {Training_Configs['model_name_or_path']}")
+        logger.info("加载比特流文件...")
+        logger.info(f"比特流文件路径: {bit_stream_file}")
 
         Generation_Configs = Config.Generation
         logger.info("Generation Configs")
@@ -168,8 +193,10 @@ def main(Config, bit_stream_file):
         logger.info("loading bits stream from cache %s" %bit_stream_file)
         with open(bit_stream_file, 'r', encoding='utf8') as f:
             bit_stream = f.read().strip()
-            bit_stream += bit_stream
-            bit_stream += bit_stream
+            bit_stream = bit_stream * 3  # 合理扩展长度
+            random.shuffle(bit_stream)
+
+            bit_index = random.randint(0, len(bit_stream) - 1)  # 修复随机索引
         bit_stream = list(bit_stream)
         random.shuffle(bit_stream)
         random.shuffle(bit_stream)
@@ -204,8 +231,8 @@ def main(Config, bit_stream_file):
                     stega_bit = [''] * (input_ids.shape[-1]+1)
                     logits = model(input_ids).logits[:, -1, :]
                     logits -= logits.max()
-                    probs = torch.exp(logits)
-                    for forbidden_id in [tokenizer.bos_token_id, tokenizer.eos_token_id, tokenizer.unk_token_id]:
+                    forbidden_tokens = Generation_Configs['forbidden_tokens']
+                    for forbidden_id in forbidden_tokens:
                         probs[:, forbidden_id] = 0
                     for forbidden_id in range(256):
                         probs[:, forbidden_id] = 0
@@ -268,6 +295,19 @@ if __name__ == '__main__':
     parser.add_argument("--config_path", type=str, default="./Configs/GPT2ADG_test.json")
     args = parser.parse_args()
     Config = utils.Config(args.config_path).get_configs()
+
+    output_file = os.path.join(
+        Training_Configs['output_dir'], 
+        f"MyGPTADG-stegos-encoding-{time.strftime('%Y%m%d-%H%M%S')}.jsonl"
+    )
+
+    f.write({
+        "stego": "_BOS " + tokenizer.decode(stega_sentence) + " _EOS",
+        "tokens": stega_sentence,
+        "idx": stega_idx,
+        "bits": stega_bit,
+        "timestamp": time.strftime('%Y-%m-%d %H:%M:%S')  # 增加时间戳
+    })
 
     # 然后将它作为参数传递给主函数main：
     main(Config, bit_stream_file=bit_stream_file_path)
