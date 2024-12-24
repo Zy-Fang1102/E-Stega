@@ -72,7 +72,7 @@ class LM(GPT2PreTrainedModel):
 		p, indices = prob.sort(descending=True)
 		self.p = p  # 保存排序后的概率以供调试或分析
 
-		# 设置特殊处理：将索引 1 的概率置为 0（可根据实际需求调整）
+		# 将索引 1 的概率置为 0（可用于屏蔽特定 token，例如特殊符号）
 		prob[:, 1] = 0
 
 		# 归一化概率分布，使其总和为 1
@@ -127,7 +127,8 @@ class Old_LM(nn.Module):
 		if forbidden is not None:
 			for forbidden_ind in forbidden:
 				prob[:, forbidden_ind] = 0
-		prob = prob / prob.sum()
+		# 修复归一化逻辑，确保每个样本的概率分布独立归一化
+		prob = prob / prob.sum(dim=-1, keepdim=True)
 		# BOS let us go hiking 2 276 172 144 17552
 		return torch.multinomial(prob, 1)
 
