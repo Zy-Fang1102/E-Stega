@@ -6,6 +6,18 @@ from transformers import PreTrainedModel,GPT2PreTrainedModel
 class LM(GPT2PreTrainedModel):
 	def __init__(self, config, cell, my_vocab_size, embed_size, hidden_dim, num_layers, dropout_rates):
 		super().__init__(config)
+
+		# 输入参数验证
+		if cell not in ['rnn', 'lstm']:
+			raise ValueError(f"Invalid RNN cell type: {cell}. Supported types are 'rnn' and 'lstm'.")
+		if my_vocab_size <= 0:
+			raise ValueError(f"Vocabulary size must be positive, but got {my_vocab_size}.")
+		if embed_size <= 0 or hidden_dim <= 0:
+			raise ValueError("Embed size and hidden dimension must be positive.")
+		if num_layers <= 0:
+			raise ValueError("Number of layers must be positive.")
+		if not (0.0 <= dropout_rates <= 1.0):
+			raise ValueError("Dropout rate must be between 0 and 1.")
 		self._cell = cell
 		self.vocab_size = my_vocab_size
 		self.embedding = nn.Embedding(my_vocab_size, embed_size)
