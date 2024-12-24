@@ -195,8 +195,9 @@ class Old_LM(nn.Module):
 		# 前向传播，获取 log 概率
 		log_prob = self.forward(input_ids, is_training=False)  # 输出形状: [batch_size, seq_length, vocab_size]
 
-		# 获取最后一个时间步的概率分布，并应用温度缩放
-		prob = torch.exp(log_prob[:, -1, :] / temperature)  # 形状: [batch_size, vocab_size]
+		if temperature <= 0:
+			raise ValueError("Temperature must be positive.")
+		prob = torch.exp(log_prob[:, -1, :] / temperature)
 
 		# 归一化概率分布（确保概率总和为 1）
 		prob = prob / prob.sum(dim=-1, keepdim=True)
