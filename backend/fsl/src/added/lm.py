@@ -6,6 +6,18 @@ from transformers import PreTrainedModel,GPT2PreTrainedModel
 class LM(GPT2PreTrainedModel):
 	def __init__(self, config, cell, my_vocab_size, embed_size, hidden_dim, num_layers, dropout_rates):
 		super().__init__(config)
+
+		# 输入参数验证
+		if cell not in ['rnn', 'lstm']:
+			raise ValueError(f"Invalid RNN cell type: {cell}. Supported types are 'rnn' and 'lstm'.")
+		if my_vocab_size <= 0:
+			raise ValueError(f"Vocabulary size must be positive, but got {my_vocab_size}.")
+		if embed_size <= 0 or hidden_dim <= 0:
+			raise ValueError("Embed size and hidden dimension must be positive.")
+		if num_layers <= 0:
+			raise ValueError("Number of layers must be positive.")
+		if not (0.0 <= dropout_rates <= 1.0):
+			raise ValueError("Dropout rate must be between 0 and 1.")
 		self._cell = cell
 		self.vocab_size = my_vocab_size
 		self.embedding = nn.Embedding(my_vocab_size, embed_size)
@@ -17,10 +29,19 @@ class LM(GPT2PreTrainedModel):
 		else:
 			raise Exception('no such rnn cell')
 
+		self.initialize_weights()
+
 		self.output_layer = nn.Linear(hidden_dim, my_vocab_size)
 		self.log_softmax = nn.LogSoftmax(dim=2)
 		self.criteration = nn.NLLLoss()
 		# self.init_weights()
+
+	def initialize_weights(self):
+		for name, param in self.named_parameters():
+			if 'weight' in name:
+				nn.init.xavier_uniform_(param)
+			elif 'bias' in name:
+				nn.init.constant_(param, 0)
 
 	def forward(self, input_ids, attention_mask=None, labels=None, is_training=True):
 		# 将输入转换为长整型
@@ -32,8 +53,23 @@ class LM(GPT2PreTrainedModel):
 
 		# 训练模式下，计算损失并返回 logits 和损失
 		if is_training:
-			loss = self.criteration(logits.view(-1, self.vocab_size), labels.view(-1))
-			return logits, loss
+			if attention_mask is not None:
+				# 将注意力掩码扩展到与嵌入序列维度相同
+				attention_mask = attention_mask.unsqueeze(-1).expand(embeddings.size())
+				embeddings = embeddings * attention_mask
+
+			output, _ = self.rnn(embeddings)
+
+			# 计算 logits
+			logits = self.output_layer(output)
+
+			# 计算损失（仅在训练模式下）
+			if is_training and labels is not None:
+				loss = self.criteration(logits.view(-1, self.vocab_size), labels.view(-1))
+				return logits, loss
+
+			# 返回 logits（推理模式）
+			return logits
 
 		# 推理模式下，仅返回 logits
 		return logits
@@ -49,7 +85,7 @@ class LM(GPT2PreTrainedModel):
 		p, indices = prob.sort(descending=True)
 		self.p = p  # 保存排序后的概率以供调试或分析
 
-		# 设置特殊处理：将索引 1 的概率置为 0（可根据实际需求调整）
+		# 将索引 1 的概率置为 0（可用于屏蔽特定 token，例如特殊符号）
 		prob[:, 1] = 0
 
 		# 归一化概率分布，使其总和为 1
@@ -72,6 +108,8 @@ class Old_LM(nn.Module):
 		# 根据指定的 RNN 单元类型（RNN 或 GRU）初始化循环神经网络
 		if cell == 'rnn':
 			self.rnn = nn.RNN(embed_size, hidden_dim, num_layers, dropout=dropout_rates, batch_first=True)
+			if not hasattr(self.rnn, "batch_first") or not self.rnn.batch_first:
+				raise ValueError("The RNN implementation must support `batch_first=True`.")
 		elif cell == 'gru':
 			self.rnn = nn.GRU(embed_size, hidden_dim, num_layers, dropout=dropout_rates, batch_first=True)
 		else:
@@ -87,7 +125,14 @@ class Old_LM(nn.Module):
 		x = x.long()
 		_ = self.embedding(x)
 		_ = _.permute(1, 0, 2)
-		h_all, __ = self.rnn(_)
+		# 初始化隐藏状态
+		if self._cell == 'rnn':
+			hidden_state = torch.zeros(self.rnn.num_layers, _.size(0), self.rnn.hidden_size).to(_.device)
+		elif self._cell == 'gru':
+			hidden_state = torch.zeros(self.rnn.num_layers, _.size(0), self.rnn.hidden_size).to(_.device)
+
+		# 前向传播
+		h_all, __ = self.rnn(_, hidden_state)
 		h_all = h_all.permute(1, 0, 2)
 		_ = self.output_layer(h_all)
 		_ = self.log_softmax(_)
@@ -97,18 +142,20 @@ class Old_LM(nn.Module):
 		log_prob = self.forward(x)
 		prob = torch.exp(log_prob)[:, -1, :]
 		p, i = prob.sort(descending=True)
-
-		prob = torch.exp(log_prob)[:, -1, :]
-		p, i = prob.sort(descending=True)
 		self.p = p
 		if forbidden is not None:
 			for forbidden_ind in forbidden:
 				prob[:, forbidden_ind] = 0
-		prob = prob / prob.sum()
+		# 修复归一化逻辑，确保每个样本的概率分布独立归一化
+		prob = prob / prob.sum(dim=-1, keepdim=True)
 		# BOS let us go hiking 2 276 172 144 17552
 		return torch.multinomial(prob, 1)
 
-	def topp_sample(self, x, topp=0.99, forbidden=[1]):
+	def topp_sample(self, x, topp=0.99, forbidden=None):
+		if forbidden is None:
+			forbidden = [1]  # 默认屏蔽索引 1
+		if not (0.0 < topp <= 1.0):
+			raise ValueError("`topp` must be in the range (0, 1].")
 		# 获取 log 概率并计算概率分布
 		log_prob = self.forward(x, is_training=False)
 		prob = torch.exp(log_prob)[:, -1, :]  # 获取最后一个时间步的概率分布
@@ -116,10 +163,12 @@ class Old_LM(nn.Module):
 		# 按概率从高到低排序
 		sorted_prob, sorted_indices = prob.sort(descending=True, dim=-1)
 
-		# 屏蔽 forbidden 中指定的 token
 		if forbidden:
 			for forbidden_ind in forbidden:
 				prob[:, forbidden_ind] = 0
+
+		# 在屏蔽后重新归一化概率分布
+		prob = prob / prob.sum(dim=-1, keepdim=True)
 
 		# 按概率重新排序（避免屏蔽后概率分布不一致）
 		sorted_prob, sorted_indices = prob.sort(descending=True, dim=-1)
@@ -166,8 +215,9 @@ class Old_LM(nn.Module):
 		# 前向传播，获取 log 概率
 		log_prob = self.forward(input_ids, is_training=False)  # 输出形状: [batch_size, seq_length, vocab_size]
 
-		# 获取最后一个时间步的概率分布，并应用温度缩放
-		prob = torch.exp(log_prob[:, -1, :] / temperature)  # 形状: [batch_size, vocab_size]
+		if temperature <= 0:
+			raise ValueError("Temperature must be positive.")
+		prob = torch.exp(log_prob[:, -1, :] / temperature)
 
 		# 归一化概率分布（确保概率总和为 1）
 		prob = prob / prob.sum(dim=-1, keepdim=True)
