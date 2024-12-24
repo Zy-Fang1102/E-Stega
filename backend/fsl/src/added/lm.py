@@ -132,7 +132,11 @@ class Old_LM(nn.Module):
 		# BOS let us go hiking 2 276 172 144 17552
 		return torch.multinomial(prob, 1)
 
-	def topp_sample(self, x, topp=0.99, forbidden=[1]):
+	def topp_sample(self, x, topp=0.99, forbidden=None):
+		if forbidden is None:
+			forbidden = [1]  # 默认屏蔽索引 1
+		if not (0.0 < topp <= 1.0):
+			raise ValueError("`topp` must be in the range (0, 1].")
 		# 获取 log 概率并计算概率分布
 		log_prob = self.forward(x, is_training=False)
 		prob = torch.exp(log_prob)[:, -1, :]  # 获取最后一个时间步的概率分布
