@@ -29,10 +29,19 @@ class LM(GPT2PreTrainedModel):
 		else:
 			raise Exception('no such rnn cell')
 
+		self.initialize_weights()
+
 		self.output_layer = nn.Linear(hidden_dim, my_vocab_size)
 		self.log_softmax = nn.LogSoftmax(dim=2)
 		self.criteration = nn.NLLLoss()
 		# self.init_weights()
+
+	def initialize_weights(self):
+		for name, param in self.named_parameters():
+			if 'weight' in name:
+				nn.init.xavier_uniform_(param)
+			elif 'bias' in name:
+				nn.init.constant_(param, 0)
 
 	def forward(self, input_ids, attention_mask=None, labels=None, is_training=True):
 		# 将输入转换为长整型
