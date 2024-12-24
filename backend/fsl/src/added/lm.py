@@ -95,6 +95,8 @@ class Old_LM(nn.Module):
 		# 根据指定的 RNN 单元类型（RNN 或 GRU）初始化循环神经网络
 		if cell == 'rnn':
 			self.rnn = nn.RNN(embed_size, hidden_dim, num_layers, dropout=dropout_rates, batch_first=True)
+			if not hasattr(self.rnn, "batch_first") or not self.rnn.batch_first:
+				raise ValueError("The RNN implementation must support `batch_first=True`.")
 		elif cell == 'gru':
 			self.rnn = nn.GRU(embed_size, hidden_dim, num_layers, dropout=dropout_rates, batch_first=True)
 		else:
