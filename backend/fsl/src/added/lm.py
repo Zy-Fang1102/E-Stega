@@ -44,8 +44,19 @@ class LM(GPT2PreTrainedModel):
 
 		# 训练模式下，计算损失并返回 logits 和损失
 		if is_training:
-			loss = self.criteration(logits.view(-1, self.vocab_size), labels.view(-1))
-			return logits, loss
+			# RNN 前向传播
+			output, _ = self.rnn(embeddings)
+
+			# 计算 logits
+			logits = self.output_layer(output)
+
+			# 计算损失（仅在训练模式下）
+			if is_training and labels is not None:
+				loss = self.criteration(logits.view(-1, self.vocab_size), labels.view(-1))
+				return logits, loss
+
+			# 返回 logits（推理模式）
+			return logits
 
 		# 推理模式下，仅返回 logits
 		return logits
