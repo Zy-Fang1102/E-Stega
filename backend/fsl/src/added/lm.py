@@ -53,7 +53,11 @@ class LM(GPT2PreTrainedModel):
 
 		# 训练模式下，计算损失并返回 logits 和损失
 		if is_training:
-			# RNN 前向传播
+			if attention_mask is not None:
+				# 将注意力掩码扩展到与嵌入序列维度相同
+				attention_mask = attention_mask.unsqueeze(-1).expand(embeddings.size())
+				embeddings = embeddings * attention_mask
+
 			output, _ = self.rnn(embeddings)
 
 			# 计算 logits
