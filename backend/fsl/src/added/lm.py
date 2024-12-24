@@ -112,7 +112,14 @@ class Old_LM(nn.Module):
 		x = x.long()
 		_ = self.embedding(x)
 		_ = _.permute(1, 0, 2)
-		h_all, __ = self.rnn(_)
+		# 初始化隐藏状态
+		if self._cell == 'rnn':
+			hidden_state = torch.zeros(self.rnn.num_layers, _.size(0), self.rnn.hidden_size).to(_.device)
+		elif self._cell == 'gru':
+			hidden_state = torch.zeros(self.rnn.num_layers, _.size(0), self.rnn.hidden_size).to(_.device)
+
+		# 前向传播
+		h_all, __ = self.rnn(_, hidden_state)
 		h_all = h_all.permute(1, 0, 2)
 		_ = self.output_layer(h_all)
 		_ = self.log_softmax(_)
