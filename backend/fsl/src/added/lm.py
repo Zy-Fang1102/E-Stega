@@ -146,10 +146,12 @@ class Old_LM(nn.Module):
 		# 按概率从高到低排序
 		sorted_prob, sorted_indices = prob.sort(descending=True, dim=-1)
 
-		# 屏蔽 forbidden 中指定的 token
 		if forbidden:
 			for forbidden_ind in forbidden:
 				prob[:, forbidden_ind] = 0
+
+		# 在屏蔽后重新归一化概率分布
+		prob = prob / prob.sum(dim=-1, keepdim=True)
 
 		# 按概率重新排序（避免屏蔽后概率分布不一致）
 		sorted_prob, sorted_indices = prob.sort(descending=True, dim=-1)
